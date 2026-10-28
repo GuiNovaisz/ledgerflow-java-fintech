@@ -1,0 +1,7 @@
+# Supply credentials through environment variables; never commit local secrets.
+logging:
+  level:
+    com.ledgerflow: DEBUG
+spring:
+  jpa:
+    show-sql: false

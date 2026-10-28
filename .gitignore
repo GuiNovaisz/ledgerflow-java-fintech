@@ -1,0 +1,9 @@
+target/
+.tools/
+.env
+.idea/
+*.iml
+.vscode/
+*.log
+!docs/evidence/*.log
+.local/
