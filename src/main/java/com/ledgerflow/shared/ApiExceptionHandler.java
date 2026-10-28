@@ -42,18 +42,18 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    ProblemDetail unexpected(Exception e) {
+    org.springframework.http.ResponseEntity<ProblemDetail> unexpected(Exception e) {
         if (e instanceof org.springframework.web.ErrorResponse response) {
             ProblemDetail detail = ProblemDetail.forStatusAndDetail(response.getStatusCode(), "The HTTP request could not be processed.");
             detail.setProperty("code", "HTTP_REQUEST_ERROR");
-            return detail;
+            return org.springframework.http.ResponseEntity.status(response.getStatusCode()).headers(response.getHeaders()).body(detail);
         }
         String reference = UUID.randomUUID().toString();
         // Log class and reference only: SQL parameters, passwords and bearer tokens never belong in logs.
         LOG.error("Request failure reference={} type={}", reference, e.getClass().getSimpleName());
         ProblemDetail detail = problem(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected failure. Contact support with the reference.");
         detail.setProperty("reference", reference);
-        return detail;
+        return org.springframework.http.ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(detail);
     }
 
     private ProblemDetail problem(HttpStatus status, String code, String message) {

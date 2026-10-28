@@ -13,6 +13,7 @@ public class OpenApiConfiguration {
     OpenAPI ledgerFlowOpenApi() {
         return new OpenAPI().info(new Info().title("LedgerFlow API").version("v1")
                         .description("Simulated personal finance ledger API"))
+                .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"))
                 .components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme()
                         .type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
     }
