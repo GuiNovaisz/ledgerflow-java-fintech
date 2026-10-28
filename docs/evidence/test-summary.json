@@ -1,0 +1,46 @@
+{
+  "command": ".\\mvnw.cmd -B -ntp -Pintegration verify",
+  "result": "BUILD SUCCESS",
+  "date": "2026-10-28",
+  "suites": [
+    {
+      "suite": "com.ledgerflow.account.AccountTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.auth.AuthServiceTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.reporting.CsvTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.security.JwtValidationTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.integration.LedgerFlowIT",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totalTests": 37.0,
+  "failures": 0.0,
+  "errors": 0.0,
+  "skipped": 0.0
+}
