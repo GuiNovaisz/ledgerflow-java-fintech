@@ -20,6 +20,7 @@ Initial portfolio release of LedgerFlow — Java Fintech Backend. Educational fi
 - Preserve exact half-open report ranges when nanosecond API inputs meet PostgreSQL microsecond storage; verified by a failing-before/passing-after integration regression.
 - Apply compatible security patches to Jackson, embedded Tomcat, PostgreSQL JDBC, Commons Lang, Log4j and test-scoped Commons Compress. Two remaining conditional Spring MVC advisories are explicitly assessed in the audit.
 - Clarify setup requirements and protect existing local environment files in the documented setup commands.
+- Replace deprecated GitHub Actions with maintained Node 24 versions, pinned by commit SHA, after warnings surfaced in the first remote CI run.
 
 ### Verified locally
 
