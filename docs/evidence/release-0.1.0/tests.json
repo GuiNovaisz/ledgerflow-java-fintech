@@ -1,0 +1,46 @@
+{
+  "command": "./mvnw.cmd -B -ntp -Pintegration verify dependency:tree -DoutputType=json",
+  "build": "SUCCESS",
+  "buildFinished": "2026-10-28T15:23:52-03:00",
+  "suites": [
+    {
+      "suite": "com.ledgerflow.account.AccountTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.auth.AuthServiceTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.reporting.CsvTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.security.JwtValidationTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "com.ledgerflow.integration.LedgerFlowIT",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "tests": 38.0,
+  "failures": 0.0,
+  "errors": 0.0,
+  "skipped": 0.0
+}

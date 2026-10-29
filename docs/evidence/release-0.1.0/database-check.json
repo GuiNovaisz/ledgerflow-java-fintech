@@ -1,0 +1,1 @@
+{"checkedAtUtc" : "2026-10-29T05:28:29.300685+00:00", "postgresVersion" : "16.15", "migrationVersion" : "1", "migrationSuccess" : true, "accounts" : 6, "operations" : 9, "ledgerEntries" : 12, "unreconciledAccounts" : 0, "unbalancedTransfers" : 0}

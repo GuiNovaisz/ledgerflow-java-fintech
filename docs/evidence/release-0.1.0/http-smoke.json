@@ -1,0 +1,40 @@
+{
+  "executedAtUtc": "2026-10-29T05:27:01.5520860+00:00",
+  "baseUri": "http://localhost:8080",
+  "result": "PASS",
+  "checks": [
+    "Application and database health are UP",
+    "Live OpenAPI includes transfer endpoint",
+    "OpenAPI declares bearer authentication for protected operations",
+    "Idempotent retry returns original operation and timestamp",
+    "Cross-user transfer preserves total balance of BRL 100.00",
+    "Unauthorized requests and foreign account access are rejected",
+    "Summary reconciles credits and debits including transfer outflow",
+    "CSV export neutralizes formula-like descriptions",
+    "Recipient sees incoming posting in their own history",
+    "Inactive accounts reject new postings"
+  ],
+  "example": {
+    "csv": "id,operationId,type,direction,amount,currency,category,description,createdAt\r\nd6c47f14-23e3-49d5-bd56-b0351af5814e,717e738f-b667-461e-9af4-72780e524a0b,WITHDRAWAL,DEBIT,10.00,BRL,FOOD,\"'=simulated spreadsheet formula\",2026-10-29T05:26:51.205981Z\r\n55f3357f-9b46-4e0c-9e35-07c027b681fc,0dff166a-5d77-4bdb-9676-915a429287b7,TRANSFER,DEBIT,35.25,BRL,OTHER,\"Internal demo transfer\",2026-10-29T05:26:38.842337Z\r\n7d7be03a-185e-4b2c-8370-ca0b66d73200,1bf90c1b-a2bc-4919-8b40-f9eccf8686fe,DEPOSIT,CREDIT,100.00,BRL,SALARY,\"Simulated initial funds\",2026-10-29T05:26:36.739523Z\r\n",
+    "senderSummary": {
+      "income": 100.0,
+      "expenses": 45.25,
+      "net": 54.75,
+      "expensesByCategory": {
+        "FOOD": 10.0,
+        "OTHER": 35.25
+      }
+    },
+    "recipientBalance": 35.25,
+    "operation": {
+      "id": "0dff166a-5d77-4bdb-9676-915a429287b7",
+      "type": "TRANSFER",
+      "sourceAccountId": "868b9283-b87a-491c-b1c7-0ab5e09cb0d1",
+      "targetAccountId": "817d7034-b086-441d-aee6-6423d879dfb5",
+      "amount": 35.25,
+      "category": "OTHER",
+      "description": "Internal demo transfer",
+      "createdAt": "2026-10-29T05:26:38.842337Z"
+    }
+  }
+}

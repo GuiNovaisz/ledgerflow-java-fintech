@@ -1,0 +1,856 @@
+{
+  "queriedAtUtc": "2026-10-29T02:25:08.7914768-03:00",
+  "source": "https://api.osv.dev/v1/querybatch",
+  "dependencyCount": 141,
+  "findings": [
+    {
+      "package": "ch.qos.logback:logback-classic",
+      "version": "1.5.34",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "ch.qos.logback:logback-core",
+      "version": "1.5.34",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml:classmate",
+      "version": "1.7.3",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.core:jackson-annotations",
+      "version": "2.21",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.core:jackson-core",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.core:jackson-databind",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.dataformat:jackson-dataformat-toml",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.datatype:jackson-datatype-jdk8",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.fasterxml.jackson.module:jackson-module-parameter-names",
+      "version": "2.21.8",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.github.docker-java:docker-java-api",
+      "version": "3.4.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "com.github.docker-java:docker-java-transport-zerodep",
+      "version": "3.4.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "com.github.docker-java:docker-java-transport",
+      "version": "3.4.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "com.github.stephenc.jcip:jcip-annotations",
+      "version": "1.0-1",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.jayway.jsonpath:json-path",
+      "version": "2.9.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "com.nimbusds:nimbus-jose-jwt",
+      "version": "9.37.4",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "com.sun.istack:istack-commons-runtime",
+      "version": "4.1.2",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "com.vaadin.external.google:android-json",
+      "version": "0.0.20131108.vaadin1",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "com.zaxxer:HikariCP",
+      "version": "6.3.3",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "commons-codec:commons-codec",
+      "version": "1.18.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "commons-io:commons-io",
+      "version": "2.20.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "io.micrometer:micrometer-commons",
+      "version": "1.15.12",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.micrometer:micrometer-core",
+      "version": "1.15.12",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.micrometer:micrometer-jakarta9",
+      "version": "1.15.12",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.micrometer:micrometer-observation",
+      "version": "1.15.12",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.smallrye:jandex",
+      "version": "3.2.0",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "io.swagger.core.v3:swagger-annotations-jakarta",
+      "version": "2.2.55",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.swagger.core.v3:swagger-core-jakarta",
+      "version": "2.2.55",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "io.swagger.core.v3:swagger-models-jakarta",
+      "version": "2.2.55",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.activation:jakarta.activation-api",
+      "version": "2.1.4",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.annotation:jakarta.annotation-api",
+      "version": "2.1.1",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.inject:jakarta.inject-api",
+      "version": "2.0.1",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.persistence:jakarta.persistence-api",
+      "version": "3.1.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.transaction:jakarta.transaction-api",
+      "version": "2.0.1",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.validation:jakarta.validation-api",
+      "version": "3.0.2",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "jakarta.xml.bind:jakarta.xml.bind-api",
+      "version": "4.0.5",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "junit:junit",
+      "version": "4.13.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "net.bytebuddy:byte-buddy-agent",
+      "version": "1.17.8",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "net.bytebuddy:byte-buddy",
+      "version": "1.17.8",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "net.java.dev.jna:jna",
+      "version": "5.13.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "net.minidev:accessors-smart",
+      "version": "2.5.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "net.minidev:json-smart",
+      "version": "2.5.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.antlr:antlr4-runtime",
+      "version": "4.13.2",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.commons:commons-compress",
+      "version": "1.28.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.commons:commons-lang3",
+      "version": "3.21.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.logging.log4j:log4j-api",
+      "version": "2.25.5",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.logging.log4j:log4j-to-slf4j",
+      "version": "2.25.5",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.tomcat.embed:tomcat-embed-core",
+      "version": "10.1.61",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.tomcat.embed:tomcat-embed-el",
+      "version": "10.1.61",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apache.tomcat.embed:tomcat-embed-websocket",
+      "version": "10.1.61",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.apiguardian:apiguardian-api",
+      "version": "1.1.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.aspectj:aspectjweaver",
+      "version": "1.9.25.1",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.assertj:assertj-core",
+      "version": "3.27.7",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.awaitility:awaitility",
+      "version": "4.2.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.checkerframework:checker-qual",
+      "version": "3.55.1",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.eclipse.angus:angus-activation",
+      "version": "2.0.3",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.flywaydb:flyway-core",
+      "version": "11.7.2",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.flywaydb:flyway-database-postgresql",
+      "version": "11.7.2",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.glassfish.jaxb:jaxb-core",
+      "version": "4.0.9",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.glassfish.jaxb:jaxb-runtime",
+      "version": "4.0.9",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.glassfish.jaxb:txw2",
+      "version": "4.0.9",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.hamcrest:hamcrest-core",
+      "version": "3.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.hamcrest:hamcrest",
+      "version": "3.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.hdrhistogram:HdrHistogram",
+      "version": "2.2.2",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.hibernate.common:hibernate-commons-annotations",
+      "version": "7.0.3.Final",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.hibernate.orm:hibernate-core",
+      "version": "6.6.53.Final",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.hibernate.validator:hibernate-validator",
+      "version": "8.0.3.Final",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.jboss.logging:jboss-logging",
+      "version": "3.6.3.Final",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.jetbrains:annotations",
+      "version": "17.0.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.jspecify:jspecify",
+      "version": "1.0.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.jupiter:junit-jupiter-api",
+      "version": "5.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.jupiter:junit-jupiter-engine",
+      "version": "5.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.jupiter:junit-jupiter-params",
+      "version": "5.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.jupiter:junit-jupiter",
+      "version": "5.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.platform:junit-platform-commons",
+      "version": "1.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.junit.platform:junit-platform-engine",
+      "version": "1.12.2",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.latencyutils:LatencyUtils",
+      "version": "2.0.3",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.mockito:mockito-core",
+      "version": "5.17.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.mockito:mockito-junit-jupiter",
+      "version": "5.17.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.objenesis:objenesis",
+      "version": "3.3",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.opentest4j:opentest4j",
+      "version": "1.3.0",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.ow2.asm:asm",
+      "version": "9.7.1",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.postgresql:postgresql",
+      "version": "42.7.14",
+      "scope": "runtime",
+      "advisories": []
+    },
+    {
+      "package": "org.rnorth.duct-tape:duct-tape",
+      "version": "1.0.8",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.skyscreamer:jsonassert",
+      "version": "1.5.3",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.slf4j:jul-to-slf4j",
+      "version": "2.0.18",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.slf4j:slf4j-api",
+      "version": "2.0.18",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springdoc:springdoc-openapi-starter-common",
+      "version": "2.10.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springdoc:springdoc-openapi-starter-webmvc-api",
+      "version": "2.10.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springdoc:springdoc-openapi-starter-webmvc-ui",
+      "version": "2.10.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-aop",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-aspects",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-beans",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-context",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-core",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-expression",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-jcl",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-jdbc",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-orm",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-test",
+      "version": "6.2.19",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-tx",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-web",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework:spring-webmvc",
+      "version": "6.2.19",
+      "scope": "compile",
+      "advisories": [
+        "GHSA-j9f9-w8pj-32f8",
+        "GHSA-pc63-qcmh-9cmg"
+      ]
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-actuator-autoconfigure",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-actuator",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-autoconfigure",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-actuator",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-data-jpa",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-jdbc",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-json",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-logging",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-oauth2-resource-server",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-security",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-test",
+      "version": "3.5.16",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-tomcat",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-validation",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter-web",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-starter",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-test-autoconfigure",
+      "version": "3.5.16",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot-test",
+      "version": "3.5.16",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.boot:spring-boot",
+      "version": "3.5.16",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.data:spring-data-commons",
+      "version": "3.5.13",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.data:spring-data-jpa",
+      "version": "3.5.13",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-config",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-core",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-crypto",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-oauth2-core",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-oauth2-jose",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-oauth2-resource-server",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-test",
+      "version": "6.5.11",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.springframework.security:spring-security-web",
+      "version": "6.5.11",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.testcontainers:database-commons",
+      "version": "1.21.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.testcontainers:jdbc",
+      "version": "1.21.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.testcontainers:junit-jupiter",
+      "version": "1.21.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.testcontainers:postgresql",
+      "version": "1.21.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.testcontainers:testcontainers",
+      "version": "1.21.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.webjars:swagger-ui",
+      "version": "5.34.0",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.webjars:webjars-locator-lite",
+      "version": "1.1.3",
+      "scope": "compile",
+      "advisories": []
+    },
+    {
+      "package": "org.xmlunit:xmlunit-core",
+      "version": "2.10.4",
+      "scope": "test",
+      "advisories": []
+    },
+    {
+      "package": "org.yaml:snakeyaml",
+      "version": "2.4",
+      "scope": "compile",
+      "advisories": []
+    }
+  ]
+}

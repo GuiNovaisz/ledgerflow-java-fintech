@@ -1,80 +1,69 @@
 # LedgerFlow
 
-LedgerFlow is an educational fintech simulation built with Java 21, Spring Boot 3.5, Maven, and PostgreSQL 16. It provides authentication, BRL accounts, simulated deposits and withdrawals, transfers, history, summaries, and CSV statements.
+LedgerFlow is an educational fintech simulation for exploring how a small account ledger handles money-like operations safely and consistently. It addresses common backend concerns—identity, account ownership, concurrent balance changes, retries, and audit history—in a runnable project. Deposits and withdrawals are simulated; no real funds move.
 
-> **Simulation only.** Deposits and withdrawals do not connect to banks, cards, payment providers, settlement rails, or real money. This repository is not a production banking platform.
+> **Simulation only.** LedgerFlow does not connect to banks, cards, payment providers, settlement rails, or real money. It is not a production banking platform.
 
 [Português (Brasil)](README.pt-BR.md) · [Architecture](docs/architecture.md) · [Diagrams](docs/diagrams.md) · [API examples](docs/requests.http) · [Learning path](docs/learning/01-java-fundamentals.md) · [Verification evidence](docs/verification.md)
 
-Verified locally: **37 automated tests passed**, PostgreSQL migrations applied, Docker Compose healthy, and the real HTTP demo passed. See the evidence link for scope and limitations.
-
-## Included
+## Features
 
 - Stateless bearer JWT authentication and BCrypt password hashing.
 - Owner-scoped BRL accounts with activation and deactivation.
-- Deposits, withdrawals, and transfers recorded as immutable ledger postings.
-- PostgreSQL transactions, row locks, and idempotency for financial requests.
-- Paginated history, UTC date-range summaries, and formula-neutralized CSV exports.
-- Flyway-managed schema and a Docker Compose local environment.
+- Simulated deposits, withdrawals, and transfers recorded as immutable ledger postings.
+- PostgreSQL transactions, row locks, and idempotency keys for financial requests.
+- Paginated history, UTC date-range summaries, and CSV statements with formula neutralization.
+- Flyway-managed schema, Docker Compose environment, and OpenAPI documentation.
+
+## Technical decisions
+
+The project is a modular monolith: one Spring Boot process and one PostgreSQL database, organized by capability (`auth`, `account`, `ledger`, `reporting`, `shared`). Money uses `BigDecimal` and fixed-scale `NUMERIC`, avoiding floating-point arithmetic. Each financial operation updates balances and records postings in one database transaction. Row locks serialize balance changes; transaction-scoped PostgreSQL advisory locks coordinate matching idempotency keys. These choices keep the example understandable while making its consistency rules explicit. See [architecture](docs/architecture.md) for invariants and tradeoffs.
+
+## Stack
+
+Java 21, Spring Boot 3.5, Maven Wrapper, Spring Security, Spring Data JPA, PostgreSQL 16, Flyway, Testcontainers, Docker Compose, and springdoc OpenAPI.
 
 ## Requirements
 
-Windows PowerShell, Docker Desktop (or another Docker-compatible engine), and network access to fetch build dependencies and container images. JDK 21 is required for host-side Maven builds and tests, but not installed on the host for the Docker Compose startup: the Dockerfile builds with a JDK 21 image and runs on a Java 21 runtime image. Maven is provided by `mvnw.cmd`.
-
-Confirm `java -version` reports Java 21. If the machine defaults to an older JDK, set `JAVA_HOME` for this PowerShell process only and prepend its `bin` directory to `PATH`:
-
-```powershell
-$env:JAVA_HOME = 'C:\path\to\jdk-21'
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-java -version
-```
-
-This does not change machine-wide Java settings.
+For host builds and tests: JDK 21 and network access for Maven dependencies. For the full local service or PostgreSQL integration profile: Docker Engine with Compose (or Docker Desktop on Windows). The wrapper supplies Maven. Docker Compose builds the app with JDK 21 and runs it on a Java 21 runtime image.
 
 ## Start locally
 
-From the repository root:
+### Linux / macOS shell
+
+```sh
+chmod +x mvnw
+# Creates random local credentials; noclobber prevents replacing an existing .env.
+(set -C; umask 077; printf 'POSTGRES_PASSWORD=%s\nJWT_SECRET=%s\nAPP_PORT=8080\n' "$(openssl rand -base64 36 | tr -d '\n')" "$(openssl rand -base64 48 | tr -d '\n')" > .env)
+docker compose up --build -d --wait
+```
+
+### Windows PowerShell
 
 ```powershell
 .\scripts\New-LocalEnvironment.ps1
 docker compose up --build -d --wait
 ```
 
-The script creates `.env` with random secrets and refuses to overwrite an existing path. `.env` is ignored by Git. Compose binds PostgreSQL to `127.0.0.1:5432` and the application to `127.0.0.1:8080` by default; set `APP_PORT` in `.env` to change the app's host port. Inside Compose, the database is `postgres:5432`.
+The environment script creates `.env` with random secrets and refuses to overwrite an existing path. `.env` is ignored by Git. These Docker Compose steps do not require a host JDK; Compose builds the application with JDK 21. Compose binds PostgreSQL and the application to loopback by default; set `APP_PORT` in `.env` to change the application port. Inside Compose, the database is `postgres:5432`.
 
-Compose reads `.env` for container configuration. A standalone Spring Boot process does **not** load `.env` automatically: export `DB_URL`, `DB_USER`, `DB_PASSWORD`, and `JWT_SECRET` in that process's environment. The local database defaults in `application.yml` use `localhost:5432` and `ledgerflow`; provide `DB_PASSWORD` and `JWT_SECRET` explicitly.
+To build or run tests on the host, install JDK 21 and use the Maven Wrapper. A Docker-compatible engine is required for the PostgreSQL integration profile, but not for unit tests. For example, run `./mvnw test` on Linux/macOS or `.\mvnw.cmd test` on PowerShell.
 
-API documentation: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Health: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health). Compose checks `/actuator/health/readiness`.
+OpenAPI UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Health: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
 
-Stop containers while preserving the local database volume:
+To stop containers and preserve the local database volume:
 
-```powershell
+```sh
 docker compose down
 ```
 
-## Verify
+## Tests and release audit
 
-Unit tests (JDK 21):
+Run unit tests with `./mvnw test` (Linux/macOS) or `.\mvnw.cmd test` (PowerShell). The PostgreSQL integration profile is `./mvnw -Pintegration verify` or `.\mvnw.cmd -Pintegration verify`; it requires JDK 21 and a working Docker-compatible engine and must not be described as verified if skipped or unavailable.
 
-```powershell
-.\mvnw.cmd test
-```
+The [v0.1.0 local release audit](docs/release-audit.md) records **38 passing tests (28 unit + 10 PostgreSQL integration), zero skipped**, a healthy Compose environment and 10 passing real HTTP checks. Dependency patch updates and the applicability assessment for two remaining Spring advisories are documented there. The [earlier 37-test record](docs/verification.md) is retained as historical evidence. Public release approval and the first GitHub Actions run remain pending.
 
-Integration profile with PostgreSQL 16 via Testcontainers:
-
-```powershell
-.\mvnw.cmd -Pintegration verify
-```
-
-The integration profile requires a working Docker-compatible engine and fails if Testcontainers cannot start PostgreSQL. An unavailable or skipped integration suite is not verified. See [docs/verification.md](docs/verification.md) for observed results and the limits of the local verification.
-
-After starting Compose, exercise the real HTTP API with PowerShell 7:
-
-```powershell
-.\scripts\Verify-Api.ps1
-```
-
-This creates synthetic sample data and prints sanitized results. Repeated runs add sample users and accounts; they never clear an existing database.
+After Compose is running, the PowerShell 7 API smoke script can be run with `./scripts/Verify-Api.ps1` (PowerShell) and creates synthetic data without clearing the database.
 
 ## API overview
 
@@ -86,23 +75,20 @@ Public endpoints: `POST /api/v1/auth/register` and `POST /api/v1/auth/login`. Ot
 | Financial operations | `POST /api/v1/transactions/deposits`, `/withdrawals`, `/transfers` |
 | Account reporting | `GET /api/v1/accounts/{id}/entries`, `/summary`, `/statement.csv` |
 
-Each financial operation requires an `Idempotency-Key` matching `[A-Za-z0-9._:-]{1,100}`. After a timeout, retry with the same key and same semantic request; the saved result is replayed. Reusing a key with a changed request returns a conflict. Failed requests do not reserve a successful key. See [docs/requests.http](docs/requests.http) for concrete requests.
+Financial operations require an `Idempotency-Key` matching `[A-Za-z0-9._:-]{1,100}`. Retry a timed-out request with the same key and same semantic request; changing the request under an existing key returns a conflict. See [API examples](docs/requests.http).
 
-## Financial and security boundaries
+## Known limitations and security boundaries
 
-- Amounts use `BigDecimal`, must be positive, have at most two fractional digits, and up to 15 integer digits. Fractions of a cent are rejected; input is never silently rounded. PostgreSQL stores `NUMERIC(17,2)`.
-- Only BRL is supported. Transfer account currencies must match.
-- The authenticated owner comes from the verified JWT. Transfers may target another user's active account, but the response does not expose recipient owner data. Incoming postings appear in the recipient's history.
-- An operation and its postings commit atomically. Transfers create one operation and two account postings. This is an internal account ledger, not a full double-entry general ledger with external clearing accounts.
-- PostgreSQL-specific transaction-scoped advisory locks serialize matching idempotency keys. Row locks protect balances and account status during concurrent operations.
-- Reports use UTC instants and half-open ranges `[from,to)`. CSV exports are limited to 10,000 rows and neutralize spreadsheet formulas in user-controlled text.
-- JWT access tokens expire after 15 minutes. There are no refresh tokens, immediate token revocation, rate limits, MFA, or KYC/AML flows.
-- Registration passwords must contain 12 to 72 UTF-8 bytes. The upper bound keeps BCrypt's input limit explicit; a character may use more than one byte.
+- BRL only; amounts must be positive, have at most two fractional digits, and fit the supported precision. Fractions of a cent are rejected rather than rounded.
+- Transfers may credit another user's active account, but recipient owner data is not exposed. This is an internal account ledger, not a full double-entry general ledger with external clearing accounts.
+- Reports use UTC instants and half-open date ranges `[from,to)`. CSV exports are capped at 10,000 rows and neutralize spreadsheet formulas in user-controlled text.
+- Access tokens expire after 15 minutes. There are no refresh tokens, immediate token revocation, rate limits, MFA, or KYC/AML flows.
+- This project does not provide external reconciliation, currency conversion, fees, interest, production operations, compliance, or a public deployment.
 
-## Design and learning
+## Next steps
 
-This modular monolith is organized around `auth`, `account`, `ledger`, `reporting`, and `shared`. Start with [architecture](docs/architecture.md), then follow the [learning chapters](docs/learning/01-java-fundamentals.md). Each chapter teaches Java through actual project classes and includes exactly three practical changes to implement and verify.
+Potential follow-up work includes reconciliation and audit tooling, operational monitoring, and identity and abuse controls suitable for a real service. Those require separate product and architecture decisions.
 
-## Roadmap
+## License and release notes
 
-Possible future work includes richer reconciliation and audit tooling, additional currencies with explicit conversion rules, operational monitoring, and production-grade identity and abuse controls. These require product and architecture decisions. No public deployment is claimed or configured here.
+[MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md)

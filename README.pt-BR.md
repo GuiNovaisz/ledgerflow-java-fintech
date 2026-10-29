@@ -1,82 +1,70 @@
 # LedgerFlow
 
-LedgerFlow é uma simulação fintech educacional feita com Java 21, Spring Boot 3.5, Maven e PostgreSQL 16. Oferece autenticação, contas em BRL, depósitos e saques simulados, transferências, histórico, resumos e extratos CSV.
+LedgerFlow é uma simulação fintech educacional para explorar como um pequeno livro de contas trata operações monetárias de forma consistente e segura. O projeto aborda preocupações comuns de backend — identidade, titularidade, alterações concorrentes de saldo, repetição de pedidos e histórico auditável — em uma aplicação executável. Depósitos e saques são simulados; nenhum dinheiro real é movimentado.
 
-> **Apenas simulação.** Depósitos e saques não se conectam a bancos, cartões, provedores de pagamento, sistemas de liquidação nem movimentam dinheiro real. Este repositório não é uma plataforma bancária de produção.
+> **Apenas simulação.** O LedgerFlow não se conecta a bancos, cartões, provedores de pagamento, sistemas de liquidação nem movimenta dinheiro real. Não é uma plataforma bancária de produção.
 
 [English](README.md) · [Arquitetura](docs/architecture.md) · [Diagramas](docs/diagrams.md) · [Exemplos de API](docs/requests.http) · [Trilha de aprendizado](docs/learning/01-java-fundamentals.md) · [Evidências de verificação](docs/verification.md)
 
-Verificado localmente: **37 testes aprovados**, migrations aplicadas, Compose saudável e fluxo HTTP real aprovado. O [relatório de entrega](docs/DELIVERY.pt-BR.md) reúne resultados, comandos, limitações e exercícios.
-
-## Incluído
+## Funcionalidades
 
 - Autenticação stateless por bearer JWT e senhas protegidas com BCrypt.
 - Contas BRL restritas ao titular, com ativação e desativação.
-- Depósitos, saques e transferências registrados em lançamentos imutáveis.
-- Transações PostgreSQL, locks de linha e idempotência em operações financeiras.
-- Histórico paginado, resumos em intervalos UTC e CSV com neutralização de fórmulas.
-- Esquema gerenciado pelo Flyway e ambiente local com Docker Compose.
+- Depósitos, saques e transferências simulados registrados em lançamentos imutáveis.
+- Transações PostgreSQL, locks de linha e chaves de idempotência para pedidos financeiros.
+- Histórico paginado, resumos em intervalos UTC e extratos CSV com neutralização de fórmulas.
+- Esquema gerenciado pelo Flyway, ambiente Docker Compose e documentação OpenAPI.
+
+## Decisões técnicas
+
+O projeto é um monólito modular: um processo Spring Boot e um banco PostgreSQL, organizados por capacidade (`auth`, `account`, `ledger`, `reporting`, `shared`). Valores usam `BigDecimal` e `NUMERIC` de escala fixa, evitando aritmética de ponto flutuante. Cada operação financeira altera saldos e registra lançamentos em uma única transação. Locks de linha serializam alterações de saldo; locks consultivos PostgreSQL transacionais coordenam chaves de idempotência iguais. Essas escolhas tornam as regras de consistência explícitas mantendo o exemplo compreensível. Consulte [arquitetura](docs/architecture.md) para invariantes e tradeoffs.
+
+## Tecnologias
+
+Java 21, Spring Boot 3.5, Maven Wrapper, Spring Security, Spring Data JPA, PostgreSQL 16, Flyway, Testcontainers, Docker Compose e springdoc OpenAPI.
 
 ## Requisitos
 
-Windows PowerShell, Docker Desktop (ou outro mecanismo compatível com Docker) e acesso à rede para baixar dependências de build e imagens de containers. JDK 21 é necessário para builds e testes Maven no host, mas não precisa estar instalado no host para iniciar via Docker Compose: o Dockerfile compila em uma imagem JDK 21 e executa em uma imagem Java 21. O Maven é fornecido por `mvnw.cmd`.
+Para build e testes no host: JDK 21 e acesso à rede para dependências Maven. Para executar o serviço completo ou o perfil de integração PostgreSQL: Docker Engine com Compose (ou Docker Desktop no Windows). O wrapper fornece o Maven. O Compose compila com JDK 21 e executa a aplicação em uma imagem Java 21.
 
-Confirme que `java -version` mostra Java 21. Se a máquina usa um JDK antigo por padrão, configure `JAVA_HOME` apenas no processo atual do PowerShell e adicione seu diretório `bin` ao início do `PATH`:
+## Início rápido
 
-```powershell
-$env:JAVA_HOME = 'C:\caminho\para\jdk-21'
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-java -version
+### Linux / macOS
+
+```sh
+chmod +x mvnw
+# Cria credenciais aleatórias locais e falha se .env já existir.
+(set -C; umask 077; printf 'POSTGRES_PASSWORD=%s\nJWT_SECRET=%s\nAPP_PORT=8080\n' "$(openssl rand -base64 36 | tr -d '\n')" "$(openssl rand -base64 48 | tr -d '\n')" > .env)
+docker compose up --build -d --wait
 ```
 
-Isso não altera as configurações globais do Java na máquina.
-
-## Iniciar localmente
-
-Na raiz do repositório:
+### Windows PowerShell
 
 ```powershell
+# O Compose compila com JDK 21; não exige JDK instalado no host.
 .\scripts\New-LocalEnvironment.ps1
 docker compose up --build -d --wait
 ```
 
-O script cria `.env` com segredos aleatórios e se recusa a sobrescrever um caminho existente. `.env` é ignorado pelo Git. Por padrão, o Compose publica o PostgreSQL em `127.0.0.1:5432` e a aplicação em `127.0.0.1:8080`; altere `APP_PORT` em `.env` para mudar a porta local da aplicação. Dentro da rede Compose, o banco é `postgres:5432`.
+O script de ambiente cria `.env` com segredos aleatórios e se recusa a sobrescrever um caminho existente. `.env` é ignorado pelo Git. O Compose não exige JDK no host, pois compila a aplicação com JDK 21. Para builds ou testes Maven no host, instale JDK 21; testes unitários não exigem Docker, mas o perfil de integração PostgreSQL exige um engine compatível com Docker. O Compose publica PostgreSQL e aplicação somente em loopback por padrão; altere `APP_PORT` em `.env` para mudar a porta da aplicação. Na rede Compose, o banco é `postgres:5432`.
 
-O Compose lê `.env` para configurar os containers. Um processo Spring Boot iniciado diretamente **não** carrega `.env` automaticamente: exporte `DB_URL`, `DB_USER`, `DB_PASSWORD` e `JWT_SECRET` no ambiente daquele processo. Os padrões locais em `application.yml` usam `localhost:5432` e `ledgerflow`; informe `DB_PASSWORD` e `JWT_SECRET` explicitamente.
-
-Documentação da API: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Saúde: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health). O Compose verifica `/actuator/health/readiness`.
+Interface OpenAPI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Saúde: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
 
 Para parar os containers preservando o volume local do banco:
 
-```powershell
+```sh
 docker compose down
 ```
 
-## Verificar
+## Testes e auditoria do release
 
-Testes unitários (JDK 21):
+Testes unitários: `./mvnw test` (Linux/macOS) ou `.\mvnw.cmd test` (PowerShell). O perfil de integração PostgreSQL é `./mvnw -Pintegration verify` ou `.\mvnw.cmd -Pintegration verify`; exige JDK 21 e Docker compatível e não deve ser descrito como verificado se foi ignorado ou ficou indisponível.
 
-```powershell
-.\mvnw.cmd test
-```
+A [auditoria local do release v0.1.0](docs/release-audit.md) registra **38 testes aprovados (28 unitários + 10 de integração PostgreSQL), nenhum ignorado**, Compose saudável e 10 verificações HTTP reais aprovadas. O relatório documenta as atualizações de dependências e a avaliação de aplicabilidade dos dois alertas Spring restantes. O [registro anterior com 37 testes](docs/verification.md) foi preservado como evidência histórica. A aprovação para publicação e a primeira execução no GitHub Actions permanecem pendentes.
 
-Perfil de integração com PostgreSQL 16 via Testcontainers:
+Após iniciar o Compose, o script de smoke test da API para PowerShell 7 pode ser executado com `./scripts/Verify-Api.ps1`. Ele cria dados sintéticos e não limpa o banco.
 
-```powershell
-.\mvnw.cmd -Pintegration verify
-```
-
-O perfil de integração exige um mecanismo Docker funcional e falha se o Testcontainers não iniciar o PostgreSQL. Uma suíte indisponível ou ignorada não está verificada. Consulte [docs/verification.md](docs/verification.md) para resultados observados e limites da verificação local.
-
-Após iniciar o Compose, exercite a API real com PowerShell 7:
-
-```powershell
-.\scripts\Verify-Api.ps1
-```
-
-O script cria usuários e contas sintéticos e exibe resultados sem senhas ou tokens. Repetir a execução adiciona dados de exemplo; não apaga o banco existente.
-
-## API resumida
+## Visão geral da API
 
 Endpoints públicos: `POST /api/v1/auth/register` e `POST /api/v1/auth/login`. As demais rotas `/api/**` exigem `Authorization: Bearer <accessToken>`.
 
@@ -86,23 +74,20 @@ Endpoints públicos: `POST /api/v1/auth/register` e `POST /api/v1/auth/login`. A
 | Operações financeiras | `POST /api/v1/transactions/deposits`, `/withdrawals`, `/transfers` |
 | Relatórios | `GET /api/v1/accounts/{id}/entries`, `/summary`, `/statement.csv` |
 
-Toda operação financeira exige `Idempotency-Key` no formato `[A-Za-z0-9._:-]{1,100}`. Após um timeout, repita a mesma chave e o mesmo pedido semântico; o resultado salvo será reproduzido. Reutilizar a chave com um pedido alterado gera conflito. Pedidos que falham não reservam uma chave bem-sucedida. Veja [docs/requests.http](docs/requests.http) para exemplos concretos.
+Operações financeiras exigem `Idempotency-Key` no formato `[A-Za-z0-9._:-]{1,100}`. Após um timeout, repita a mesma chave e o mesmo pedido semântico; mudar o pedido para uma chave já usada gera conflito. Veja [exemplos da API](docs/requests.http).
 
-## Limites financeiros e de segurança
+## Limitações conhecidas e segurança
 
-- Valores usam `BigDecimal`, devem ser positivos, ter até duas casas decimais e até 15 dígitos inteiros. Frações de centavo são rejeitadas; não há arredondamento silencioso. O PostgreSQL armazena `NUMERIC(17,2)`.
-- Há suporte somente a BRL. As moedas das contas de uma transferência devem coincidir.
-- O titular autenticado vem do JWT validado. Transferências podem ter como destino uma conta ativa de outra pessoa, mas a resposta não revela dados do titular destinatário. Lançamentos recebidos aparecem no histórico da conta.
-- A operação e seus lançamentos são confirmados atomicamente. Uma transferência cria uma operação e dois lançamentos. É um livro interno de contas, não um razão contábil completo de partidas dobradas com contas externas de compensação.
-- Locks consultivos transacionais específicos do PostgreSQL serializam chaves de idempotência iguais. Locks de linha protegem saldos e status durante operações concorrentes.
-- Relatórios usam instantes UTC e intervalos semiabertos `[from,to)`. A exportação CSV tem limite de 10.000 linhas e neutraliza fórmulas de planilha em texto fornecido pelo usuário.
-- Tokens de acesso JWT expiram em 15 minutos. Não há refresh token, revogação imediata, limite de requisições, MFA nem fluxos KYC/AML.
-- Senhas de cadastro devem ter de 12 a 72 bytes UTF-8. O limite superior explicita o limite de entrada do BCrypt; um caractere pode ocupar mais de um byte.
-
-## Arquitetura e aprendizado
-
-Este monólito modular se organiza nas capacidades `auth`, `account`, `ledger`, `reporting` e `shared`. Comece pela [arquitetura](docs/architecture.md), depois siga os [capítulos de aprendizado](docs/learning/01-java-fundamentals.md). Cada capítulo ensina Java com classes reais do projeto e contém exatamente três alterações práticas para implementar e verificar.
+- Somente BRL; valores devem ser positivos, ter até duas casas decimais e caber na precisão suportada. Frações de centavo são rejeitadas, sem arredondamento.
+- Transferências podem creditar a conta ativa de outra pessoa, mas dados do titular destinatário não são expostos. É um livro interno de contas, não um razão completo de partidas dobradas com contas externas de compensação.
+- Relatórios usam instantes UTC e intervalos semiabertos `[from,to)`. CSV tem limite de 10.000 linhas e neutraliza fórmulas em texto fornecido pelo usuário.
+- Tokens de acesso expiram em 15 minutos. Não há refresh token, revogação imediata, limite de requisições, MFA ou fluxos KYC/AML.
+- O projeto não oferece conciliação externa, conversão cambial, tarifas, juros, operações de produção, compliance ou implantação pública.
 
 ## Próximos passos
 
-Possíveis evoluções incluem ferramentas melhores de conciliação e auditoria, outras moedas com regras explícitas de conversão, monitoramento operacional e controles de identidade e abuso adequados à produção. Isso exige decisões de produto e arquitetura. Este README não afirma nem configura uma implantação pública.
+Possíveis evoluções incluem ferramentas de conciliação e auditoria, monitoramento operacional e controles de identidade e abuso adequados a um serviço real. Isso exige decisões próprias de produto e arquitetura.
+
+## Licença e notas da versão
+
+[Licença MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas da versão v0.1.0](docs/releases/v0.1.0.md)
