@@ -81,7 +81,13 @@ public class ReportService {
         Instant end = to == null ? Instant.now().plusSeconds(1) : to;
         if (!start.isBefore(end) || start.isBefore(Instant.EPOCH) || end.isAfter(Instant.parse("9999-12-31T23:59:59Z")))
             throw new IllegalArgumentException("Period must be an increasing UTC interval from year 1970 through 9999");
-        return new Period(start, end);
+        // Stored postings have microsecond precision. Ceiling both bounds preserves
+        // [from,to) for discrete stored timestamps; JDBC's rounding would not.
+        return new Period(ceilToMicros(start), ceilToMicros(end));
+    }
+    private static Instant ceilToMicros(Instant value) {
+        Instant truncated = value.truncatedTo(java.time.temporal.ChronoUnit.MICROS);
+        return truncated.equals(value) ? value : truncated.plus(1, java.time.temporal.ChronoUnit.MICROS);
     }
     private record Period(Instant from, Instant to) { }
 }

@@ -152,6 +152,43 @@ class LedgerFlowIT {
     }
 
     @Test
+    void reportTimeFiltersRespectNanosecondHalfOpenBoundaries() throws Exception {
+        User owner = user();
+        Account account = account(owner, "Report time boundaries");
+        JsonNode operation = deposit(owner, account, "17.25", "report-time-boundary");
+        UUID operationId = UUID.fromString(operation.path("id").asText());
+        Instant createdAt = Instant.parse(operation.path("createdAt").asText());
+        String base = "/api/v1/accounts/" + account.id();
+
+        Instant after = createdAt.plusNanos(1);
+        Instant afterEnd = createdAt.plusSeconds(1);
+        JsonNode excludedEntries = getJson(owner, base + "/entries?from=" + after + "&to=" + afterEnd + "&page=0&size=20");
+        assertThat(excludedEntries.path("totalElements").asLong()).isZero();
+        JsonNode excludedSummary = getJson(owner, base + "/summary?from=" + after + "&to=" + afterEnd);
+        assertThat(excludedSummary.path("income").decimalValue()).isEqualByComparingTo("0.00");
+        MvcResult excludedCsv = mvc.perform(get(base + "/statement.csv").param("from", after.toString())
+                        .param("to", afterEnd.toString()).header("Authorization", bearer(owner)))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(excludedCsv.getResponse().getContentAsString()).doesNotContain(operationId.toString());
+
+        Instant before = createdAt.minusSeconds(1);
+        Instant through = createdAt.plusNanos(1);
+        JsonNode includedEntries = getJson(owner, base + "/entries?from=" + before + "&to=" + through + "&page=0&size=20");
+        assertThat(includedEntries.path("totalElements").asLong()).isEqualTo(1);
+        assertThat(includedEntries.path("content").get(0).path("operationId").asText()).isEqualTo(operationId.toString());
+        JsonNode includedSummary = getJson(owner, base + "/summary?from=" + before + "&to=" + through);
+        assertThat(includedSummary.path("income").decimalValue()).isEqualByComparingTo("17.25");
+        MvcResult includedCsv = mvc.perform(get(base + "/statement.csv").param("from", before.toString())
+                        .param("to", through.toString()).header("Authorization", bearer(owner)))
+                .andExpect(status().isOk()).andReturn();
+        assertThat(includedCsv.getResponse().getContentAsString()).contains(operationId.toString());
+
+        JsonNode tinyInterval = getJson(owner, base + "/entries?from=" + after + "&to=" + createdAt.plusNanos(2)
+                + "&page=0&size=20");
+        assertThat(tinyInterval.path("totalElements").asLong()).isZero();
+    }
+
+    @Test
     void authenticationValidationAndOwnershipAreEnforced() throws Exception {
         MvcResult registration = mvc.perform(post("/api/v1/auth/register").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email() + "\",\"password\":\"password-strong-123\",\"displayName\":\"Test User\"}"))
