@@ -1,6 +1,6 @@
 # v0.1.0 release audit
 
-Local release-candidate verification: **2026-10-28–29** (America/Sao_Paulo). Public repository creation, first push, tag and GitHub Release await the owner's explicit approval. This is an educational financial simulation, not a banking certification or a production-readiness claim.
+Local release-candidate verification: **2026-10-28–29** (America/Sao_Paulo). The owner explicitly approved public repository creation, push, tag and release on **2026-10-29**, and requested a more identifiable repository name. This is an educational financial simulation, not a banking certification or a production-readiness claim.
 
 ## Findings and corrections
 
@@ -61,9 +61,11 @@ Gitleaks 8.30.1 was downloaded from the official release and checked against its
 
 Ignored `.env`, `.tools`, build outputs and logs are not part of the publication candidate. No operational password, token or signing key was found in the reviewed publishable content. The local recovery bundle is ignored and must stay private. Secret scanning is heuristic, not proof of absence.
 
-Prepared destination: `GuiNovaisz/ledgerflow`, public, branch `main`. There is no remote configured yet and no tag or release created. Repository description: “Educational financial ledger REST API built with Java 21, Spring Boot, PostgreSQL and Docker, with transactional consistency, idempotency, JWT authentication and automated tests.” Suggested topics: `java`, `spring-boot`, `backend`, `postgresql`, `docker`, `rest-api`, `testcontainers`, `portfolio`.
+Public repository: [GuiNovaisz/ledgerflow-java-fintech](https://github.com/GuiNovaisz/ledgerflow-java-fintech), branch `main`, local remote `origin` configured to its HTTPS Git URL. Display name: **LedgerFlow — Java Fintech Backend**. GitHub confirms MIT licensing and the topics `java`, `spring-boot`, `backend`, `postgresql`, `docker`, `rest-api`, `testcontainers`, `fintech`, `portfolio`.
 
-After explicit publication approval: create the repository, push `main`, verify remote SHA and GitHub Actions, then create annotated tag `v0.1.0` on the approved commit and publish [the prepared release notes](releases/v0.1.0.md). Do not force-push or overwrite an existing tag. GitHub Actions has not yet run remotely.
+The first push was verified remotely at `51b7ce6dc9b21cea1540fdb765d9ad98463c926a`. Its [GitHub Actions run](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/40873784507) completed successfully, including Maven unit/integration tests, Docker image build and readiness. [Remote CI evidence](evidence/release-0.1.0/github-ci-initial.json) records the SHA and individual steps. The final documentation commit updates the name, public links and verified status; its CI must also pass before creating annotated tag `v0.1.0`. No application behavior is changed by that documentation commit.
+
+Release: [v0.1.0](https://github.com/GuiNovaisz/ledgerflow-java-fintech/releases/tag/v0.1.0), with [English release notes](releases/v0.1.0.md). Publication uses an existing verified tag and no extra binary assets. No force push, tag replacement or duplicate release is authorized or needed.
 
 ## Boundaries and next priorities
 

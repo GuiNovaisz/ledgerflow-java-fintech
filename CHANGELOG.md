@@ -2,9 +2,9 @@
 
 All notable changes to LedgerFlow are documented here. This project follows the spirit of Keep a Changelog and uses Semantic Versioning.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-10-29
 
-Initial public release candidate. The release is not published yet; the date will be added when publication occurs.
+Initial portfolio release of LedgerFlow — Java Fintech Backend. Educational financial simulation, licensed under MIT.
 
 ### Added
 
@@ -23,6 +23,6 @@ Initial public release candidate. The release is not published yet; the date wil
 
 ### Verified locally
 
-- 38 automated tests passed with no failures, errors or skips; Docker Compose healthy, 10 real HTTP checks passed, and database balances reconciled. Public publication and remote CI are pending.
+- 38 automated tests passed with no failures, errors or skips; Docker Compose healthy, 10 real HTTP checks passed, and database balances reconciled. The first GitHub Actions run also passed Maven verification, image build and readiness checks.
 
 See [v0.1.0 release notes](docs/releases/v0.1.0.md) and the [release audit](docs/release-audit.md) for scope and verification status.

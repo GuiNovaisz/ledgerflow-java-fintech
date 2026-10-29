@@ -1,0 +1,102 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-10-29T12:30:15Z",
+  "databaseId": 40873784507,
+  "headSha": "51b7ce6dc9b21cea1540fdb765d9ad98463c926a",
+  "jobs": [
+    {
+      "completedAt": "2026-10-29T12:32:15Z",
+      "conclusion": "success",
+      "databaseId": 123447284996,
+      "name": "verify",
+      "startedAt": "2026-10-29T12:30:17Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-29T12:30:19Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-29T12:30:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:30:20Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "startedAt": "2026-10-29T12:30:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:30:20Z",
+          "conclusion": "success",
+          "name": "Set up Java 21",
+          "number": 3,
+          "startedAt": "2026-10-29T12:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:31:16Z",
+          "conclusion": "success",
+          "name": "Run unit and PostgreSQL integration tests",
+          "number": 4,
+          "startedAt": "2026-10-29T12:30:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:31:16Z",
+          "conclusion": "success",
+          "name": "Prepare ephemeral compose credentials",
+          "number": 5,
+          "startedAt": "2026-10-29T12:31:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:31:17Z",
+          "conclusion": "success",
+          "name": "Validate Compose configuration",
+          "number": 6,
+          "startedAt": "2026-10-29T12:31:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:32:10Z",
+          "conclusion": "success",
+          "name": "Build and smoke test the containerized app",
+          "number": 7,
+          "startedAt": "2026-10-29T12:31:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:32:13Z",
+          "conclusion": "success",
+          "name": "Post Set up Java 21",
+          "number": 13,
+          "startedAt": "2026-10-29T12:32:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:32:13Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 14,
+          "startedAt": "2026-10-29T12:32:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-29T12:32:13Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-29T12:32:13Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/40873784507/job/123447284996"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-10-29T12:32:16Z",
+  "url": "https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/40873784507"
+}

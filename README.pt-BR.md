@@ -1,4 +1,6 @@
-# LedgerFlow
+# LedgerFlow — Java Fintech Backend
+
+[![CI](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml)
 
 LedgerFlow é uma simulação fintech educacional para explorar como um pequeno livro de contas trata operações monetárias de forma consistente e segura. O projeto aborda preocupações comuns de backend — identidade, titularidade, alterações concorrentes de saldo, repetição de pedidos e histórico auditável — em uma aplicação executável. Depósitos e saques são simulados; nenhum dinheiro real é movimentado.
 
@@ -28,6 +30,13 @@ Java 21, Spring Boot 3.5, Maven Wrapper, Spring Security, Spring Data JPA, Postg
 Para build e testes no host: JDK 21 e acesso à rede para dependências Maven. Para executar o serviço completo ou o perfil de integração PostgreSQL: Docker Engine com Compose (ou Docker Desktop no Windows). O wrapper fornece o Maven. O Compose compila com JDK 21 e executa a aplicação em uma imagem Java 21.
 
 ## Início rápido
+
+Clone o repositório público e siga as instruções para o seu terminal:
+
+```sh
+git clone https://github.com/GuiNovaisz/ledgerflow-java-fintech.git
+cd ledgerflow-java-fintech
+```
 
 ### Linux / macOS
 
@@ -60,7 +69,7 @@ docker compose down
 
 Testes unitários: `./mvnw test` (Linux/macOS) ou `.\mvnw.cmd test` (PowerShell). O perfil de integração PostgreSQL é `./mvnw -Pintegration verify` ou `.\mvnw.cmd -Pintegration verify`; exige JDK 21 e Docker compatível e não deve ser descrito como verificado se foi ignorado ou ficou indisponível.
 
-A [auditoria local do release v0.1.0](docs/release-audit.md) registra **38 testes aprovados (28 unitários + 10 de integração PostgreSQL), nenhum ignorado**, Compose saudável e 10 verificações HTTP reais aprovadas. O relatório documenta as atualizações de dependências e a avaliação de aplicabilidade dos dois alertas Spring restantes. O [registro anterior com 37 testes](docs/verification.md) foi preservado como evidência histórica. A aprovação para publicação e a primeira execução no GitHub Actions permanecem pendentes.
+A [auditoria do release v0.1.0](docs/release-audit.md) registra **38 testes aprovados (28 unitários + 10 de integração PostgreSQL), nenhum ignorado**, Compose saudável e 10 verificações HTTP locais aprovadas. A [primeira execução no GitHub Actions](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/40873784507) também aprovou a suíte Maven, o build da imagem Docker e a verificação de prontidão. O relatório documenta as atualizações de dependências e a avaliação de aplicabilidade dos dois alertas Spring restantes. O [registro anterior com 37 testes](docs/verification.md) foi preservado como evidência histórica.
 
 Após iniciar o Compose, o script de smoke test da API para PowerShell 7 pode ser executado com `./scripts/Verify-Api.ps1`. Ele cria dados sintéticos e não limpa o banco.
 
@@ -90,4 +99,4 @@ Possíveis evoluções incluem ferramentas de conciliação e auditoria, monitor
 
 ## Licença e notas da versão
 
-[Licença MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas da versão v0.1.0](docs/releases/v0.1.0.md)
+[Licença MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas da versão v0.1.0](docs/releases/v0.1.0.md) · [GitHub Release](https://github.com/GuiNovaisz/ledgerflow-java-fintech/releases/tag/v0.1.0)
