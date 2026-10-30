@@ -24,6 +24,16 @@ spring:
       fail-on-numbers-for-enums: true
 server:
   port: ${PORT:8080}
+  servlet:
+    session:
+      timeout: 15m
+      tracking-modes: cookie
+      cookie:
+        name: LEDGERFLOW_SESSION
+        path: /
+        http-only: true
+        same-site: strict
+        secure: ${SESSION_COOKIE_SECURE:false}
   error:
     include-message: never
     include-stacktrace: never

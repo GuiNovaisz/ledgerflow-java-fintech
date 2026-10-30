@@ -39,6 +39,12 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenResponse login(LoginRequest request) {
+        return tokens.issue(authenticate(request).id());
+    }
+
+    /** Shared credential verification for the stateless API and browser session. */
+    @Transactional(readOnly = true)
+    public UserResponse authenticate(LoginRequest request) {
         String email = normalize(request.email());
         int passwordBytes = request.password().getBytes(StandardCharsets.UTF_8).length;
         if (passwordBytes < 12 || passwordBytes > 72) {
@@ -51,7 +57,13 @@ public class AuthService {
         if (user == null || !valid) {
             throw new BusinessException(HttpStatus.UNAUTHORIZED, "invalid_credentials", "Invalid email or password");
         }
-        return tokens.issue(user.getId());
+        return UserResponse.from(user);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse profile(java.util.UUID id) {
+        return users.findById(id).map(UserResponse::from).orElseThrow(() ->
+                new BusinessException(HttpStatus.UNAUTHORIZED, "invalid_session", "Authentication is required"));
     }
 
     private static String normalize(String email) {
