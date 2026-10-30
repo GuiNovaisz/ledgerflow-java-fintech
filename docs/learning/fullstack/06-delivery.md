@@ -30,7 +30,7 @@ Testcontainers inicia bancos isolados de teste. Um banco em memória com comport
 
 [ci.yml](../../../.github/workflows/ci.yml) instala versões de runtime, usa cache, executa testes/builds, consulta dependências, procura segredos e roda a stack com E2E. O ambiente CI recebe credenciais aleatórias e efêmeras. A remoção final com `-v` é apropriada somente para esse projeto descartável do runner.
 
-CI significa integração contínua. CD pode significar entrega ou implantação contínua; aqui não há deploy público automático. Um workflow editado localmente não é um CI remoto aprovado. A v0.2.0 aguarda autorização para publicação, portanto seus resultados locais e remotos são reportados separadamente.
+CI significa integração contínua. CD pode significar entrega ou implantação contínua; aqui não há deploy público automático. Um workflow editado localmente não é um CI remoto aprovado. A publicação da v0.2.0 foi autorizada em 30/10/2026. Seus resultados locais e remotos são reportados separadamente; o CI da DEV foi [verificado no GitHub](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/41058844646). Novas releases exigem nova autorização.
 
 Gitleaks procura padrões de segredo; ausência de achados não garante que nenhum segredo exista. npm audit e OSV consultam bases conhecidas; não cobrem automaticamente sistema operacional das imagens, lógica de negócio ou toda configuração. Dois avisos Spring são mantidos com justificativa específica, não ignorados globalmente.
 

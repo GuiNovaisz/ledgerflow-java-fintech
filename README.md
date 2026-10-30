@@ -136,7 +136,7 @@ BRL somente; ledger interno, sem contabilidade geral completa, bancos, pagamento
 
 Sessões em memória, sem recuperação de senha, MFA ou verificação de e-mail. JWTs de clientes externos expiram em 15 minutos, sem revogação imediata. Uma operação incerta mantém a chave na aba; fechar/recarregar a aba perde esse contexto, exigindo consulta ao extrato antes de uma nova tentativa. Não há garantia de conformidade WCAG completa; E2E cobre Chromium, sem uma matriz completa de navegadores. Não há implantação pública.
 
-Próximas melhorias: identidade e sessões distribuídas; conciliação automática entre saldos e lançamentos com observabilidade; acessibilidade e cobertura em múltiplos navegadores. [MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas preparadas v0.2.0](docs/releases/v0.2.0.md).
+Próximas melhorias: identidade e sessões distribuídas; conciliação automática entre saldos e lançamentos com observabilidade; acessibilidade e cobertura em múltiplos navegadores. [MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas da v0.2.0](docs/releases/v0.2.0.md).
 
 ---
 
@@ -198,4 +198,4 @@ BRL only; an internal account ledger rather than a full general ledger. No banks
 
 Sessions are in memory. There is no password recovery, MFA or email verification. External-client JWTs expire after 15 minutes without immediate revocation. Uncertain-operation recovery state lives in the current tab; closing/reloading loses that context, so inspect history before initiating another operation. Full WCAG conformance and cross-browser coverage are not claimed; E2E uses Chromium. No public deployment is provided.
 
-Next priorities: stronger identity/distributed sessions, automated reconciliation and operational visibility, and broader accessibility/browser coverage. **Educational financial simulation only; no real money moves.** [MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Prepared v0.2.0 notes](docs/releases/v0.2.0.md).
+Next priorities: stronger identity/distributed sessions, automated reconciliation and operational visibility, and broader accessibility/browser coverage. **Educational financial simulation only; no real money moves.** [MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [v0.2.0 release notes](docs/releases/v0.2.0.md).
