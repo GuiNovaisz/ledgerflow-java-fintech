@@ -6,7 +6,7 @@
 
 [Português](#-português-brasil) | [English](#-english)
 
-**v0.2.0: candidato local, ainda não publicado / local candidate, not yet published.** A release pública v0.1.0 permanece preservada. / The public v0.1.0 release remains unchanged.
+**v0.2.0 — Full Stack.** Desenvolvimento em `DEV`; versões estáveis em `main`. / Development on `DEV`; stable versions on `main`. [Fluxo / Workflow](CONTRIBUTING.md) · [Releases](https://github.com/GuiNovaisz/ledgerflow-java-fintech/releases) · [CI](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml). A release v0.1.0 permanece preservada. / The v0.1.0 release remains unchanged.
 
 ![Dashboard escuro com dados fictícios persistidos / Dark dashboard with persisted synthetic data](docs/assets/screenshots/dashboard-dark-desktop.png)
 
@@ -113,7 +113,7 @@ npx playwright test e2e/fullstack.spec.ts
 
 Para as portas isoladas, defina `E2E_BASE_URL=http://127.0.0.1:18081` no processo. A captura opcional usa também `CAPTURE_PORTFOLIO=1` e `e2e/portfolio.spec.ts`, após criar a demo. Testes E2E criam somente identidades sintéticas novas. Não reutilizam o navegador pessoal.
 
-Resultado local do candidato: **51 testes Java**, **13 testes Vitest**, **6 cenários E2E** e **1 cenário de captura visual** aprovados. Lint, TypeScript e builds aprovados; npm audit sem achados. O novo workflow foi preparado, mas **CI remoto v0.2.0 ainda não executado**, pois publicação depende de autorização. Evidências, limites e comandos: [verificação v0.2.0](docs/verification-v0.2.0.md).
+Validação local: **51 testes Java**, **13 testes Vitest**, **6 cenários E2E** e **1 cenário de captura visual** aprovados. Lint, TypeScript e builds aprovados; npm audit sem achados. O workflow executa testes, builds, auditorias e E2E no GitHub; consulte o resultado do commit desejado em [Actions](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml). Evidências, limites e comandos: [verificação v0.2.0](docs/verification-v0.2.0.md).
 
 ### API e estrutura
 
@@ -184,7 +184,7 @@ For development, use host JDK 21 and Node 24+. With the API on 8080, run `npm ci
 
 Run `./mvnw -B -Pintegration verify` with Docker available. In `frontend/`, run `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npx playwright install chromium`, and `npx playwright test e2e/fullstack.spec.ts` against running Compose. Set `E2E_BASE_URL` when using nonstandard ports. Optional portfolio capture uses `CAPTURE_PORTFOLIO=1`, the seeded demo and `e2e/portfolio.spec.ts`. Tests use isolated contexts and new synthetic identities.
 
-Local candidate results: **51 Java tests**, **13 Vitest tests**, **6 E2E scenarios**, and **1 visual-capture scenario** passed. Lint, types and builds passed; npm audit found no advisories. The expanded workflow is prepared; **remote v0.2.0 CI has not run**, pending publication approval. [Evidence and scope](docs/verification-v0.2.0.md).
+Local verification: **51 Java tests**, **13 Vitest tests**, **6 E2E scenarios**, and **1 visual-capture scenario** passed. Lint, types and builds passed; npm audit found no advisories. GitHub Actions runs tests, builds, audits and E2E; inspect the required commit in [Actions](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml). [Evidence and scope](docs/verification-v0.2.0.md).
 
 ### API and project structure
 

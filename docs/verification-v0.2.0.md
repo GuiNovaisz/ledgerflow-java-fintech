@@ -1,6 +1,6 @@
 # Verificação e prontidão — LedgerFlow v0.2.0
 
-**Consolidado em 30/10/2026. Status: candidato local pronto para revisão; publicação não autorizada nesta etapa.**
+**Registro da revisão local de 30/10/2026, anterior à publicação.** O proprietário autorizou posteriormente merge, push, tag e release e definiu `DEV` como branch de desenvolvimento. Os resultados e pendências abaixo preservam o estado observado durante a revisão local; o histórico remoto de publicação está em [Actions](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml) e [Releases](https://github.com/GuiNovaisz/ledgerflow-java-fintech/releases).
 
 Branch: `feature/fullstack-dashboard`. A base pública `main` e o destino da tag v0.1.0 permanecem em `1e631f5dc95e6800a6902cd07b48967391c2b123`. Consulta remota de leitura em 30/10 confirmou essa preservação e ausência de tag v0.2.0. Não houve merge, push, tag, release nova nem deploy público.
 

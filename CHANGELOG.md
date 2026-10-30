@@ -2,7 +2,7 @@
 
 All notable changes to LedgerFlow are documented here. This project follows the spirit of Keep a Changelog and uses Semantic Versioning.
 
-## [0.2.0] - Não publicado / Unreleased
+## [0.2.0] - 2026-10-30
 
 ### Português (Brasil)
 
@@ -24,7 +24,7 @@ All notable changes to LedgerFlow are documented here. This project follows the 
 - Component tests, Playwright journeys, full stack Compose, audits and expanded CI.
 - Seven real screenshots, bilingual README, technical decisions and learning/interview/exercise materials.
 
-Local results and scope: [v0.2.0 verification](docs/verification-v0.2.0.md). Publication awaits explicit approval; the following v0.1.0 history is unchanged.
+Local results and scope: [v0.2.0 verification](docs/verification-v0.2.0.md). Publication was authorized by the owner on 2026-10-30. Development continues on `DEV`; the following v0.1.0 history is unchanged.
 
 ## [0.1.0] - 2026-10-29
 
