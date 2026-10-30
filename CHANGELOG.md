@@ -2,6 +2,30 @@
 
 All notable changes to LedgerFlow are documented here. This project follows the spirit of Keep a Changelog and uses Semantic Versioning.
 
+## [0.2.0] - Não publicado / Unreleased
+
+### Português (Brasil)
+
+- Frontend React/TypeScript integrado: dashboard, contas, operações, extrato, relatórios, categorias e metas manuais.
+- Sessão HttpOnly com CSRF, logout no servidor, limitação básica de autenticação e preservação isolada da API bearer.
+- Analytics e busca do extrato no servidor, CSV filtrado e consulta do resultado por chave de idempotência.
+- Metas com migration V2, isolamento por dono e proteção contra conflitos de edição.
+- Layout responsivo, temas claro/escuro/sistema e PT-BR/EN.
+- Testes de componente e jornadas Playwright, Compose Full Stack, auditorias e CI ampliado.
+- Sete screenshots reais, README bilíngue, decisões técnicas e trilha educacional com entrevistas/exercícios.
+
+### English
+
+- Integrated React/TypeScript frontend: dashboard, accounts, operations, statements, reports, categories and manual goals.
+- HttpOnly sessions with CSRF, server-side logout, basic authentication throttling and isolated legacy bearer support.
+- Server-side analytics/statement search, filtered CSV and idempotency-key outcome lookup.
+- Owner-scoped goals with V2 migration and version conflict protection.
+- Responsive layouts, dark/light/system themes and Portuguese/English localization.
+- Component tests, Playwright journeys, full stack Compose, audits and expanded CI.
+- Seven real screenshots, bilingual README, technical decisions and learning/interview/exercise materials.
+
+Local results and scope: [v0.2.0 verification](docs/verification-v0.2.0.md). Publication awaits explicit approval; the following v0.1.0 history is unchanged.
+
 ## [0.1.0] - 2026-10-29
 
 Initial portfolio release of LedgerFlow — Java Fintech Backend. Educational financial simulation, licensed under MIT.

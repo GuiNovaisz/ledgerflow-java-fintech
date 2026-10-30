@@ -1,103 +1,201 @@
-# LedgerFlow — Java Fintech Backend
+# LedgerFlow — Full Stack Financial Simulation
 
-[![CI](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/workflows/ci.yml)
+> 🇧🇷 **Documentação em Português (Brasil).**
+>
+> 🇺🇸 **The complete English version is available immediately after the Portuguese section.**
 
-LedgerFlow is an educational fintech simulation for exploring how a small account ledger handles money-like operations safely and consistently. It addresses common backend concerns—identity, account ownership, concurrent balance changes, retries, and audit history—in a runnable project. Deposits and withdrawals are simulated; no real funds move.
+[Português](#-português-brasil) | [English](#-english)
 
-> **Simulation only.** LedgerFlow does not connect to banks, cards, payment providers, settlement rails, or real money. It is not a production banking platform.
+**v0.2.0: candidato local, ainda não publicado / local candidate, not yet published.** A release pública v0.1.0 permanece preservada. / The public v0.1.0 release remains unchanged.
 
-[Português (Brasil)](README.pt-BR.md) · [Architecture](docs/architecture.md) · [Diagrams](docs/diagrams.md) · [API examples](docs/requests.http) · [Learning path](docs/learning/01-java-fundamentals.md) · [Verification evidence](docs/verification.md)
+![Dashboard escuro com dados fictícios persistidos / Dark dashboard with persisted synthetic data](docs/assets/screenshots/dashboard-dark-desktop.png)
 
-## Features
+## 🇧🇷 Português (Brasil)
 
-- Stateless bearer JWT authentication and BCrypt password hashing.
-- Owner-scoped BRL accounts with activation and deactivation.
-- Simulated deposits, withdrawals, and transfers recorded as immutable ledger postings.
-- PostgreSQL transactions, row locks, and idempotency keys for financial requests.
-- Paginated history, UTC date-range summaries, and CSV statements with formula neutralization.
-- Flyway-managed schema, Docker Compose environment, and OpenAPI documentation.
+### Visão geral e objetivo
 
-## Technical decisions
+LedgerFlow é uma aplicação educacional para gerenciar contas, movimentações e planejamento financeiro simulado. O objetivo técnico é demonstrar uma interface completa conectada a um backend que preserva saldo, propriedade dos dados e segurança de repetição de operações. Nenhum dinheiro real é movimentado e não há integração bancária.
 
-The project is a modular monolith: one Spring Boot process and one PostgreSQL database, organized by capability (`auth`, `account`, `ledger`, `reporting`, `shared`). Money uses `BigDecimal` and fixed-scale `NUMERIC`, avoiding floating-point arithmetic. Each financial operation updates balances and records postings in one database transaction. Row locks serialize balance changes; transaction-scoped PostgreSQL advisory locks coordinate matching idempotency keys. These choices keep the example understandable while making its consistency rules explicit. See [architecture](docs/architecture.md) for invariants and tradeoffs.
+### Funcionalidades
 
-## Stack
+- Cadastro, login, perfil de leitura, expiração e logout de sessão no servidor.
+- Dashboard com saldo total, entradas, saídas, quantidade de operações, evolução diária e despesas por categoria, calculados no PostgreSQL.
+- Contas BRL: criação, detalhes, histórico e ativação/desativação.
+- Depósitos, saques e transferências simulados, com confirmação, chave de idempotência e consulta do resultado após falha de rede.
+- Extrato com busca textual, filtros, paginação e exportação CSV; relatório por período. A busca global abre o extrato filtrado.
+- Categorias fixas traduzidas; metas com criação, edição, exclusão e controle de versão. Metas são planejamento manual e não reservam saldo.
+- Temas escuro, claro e do sistema; PT-BR/EN; navegação adaptada a desktop e celular.
 
-Java 21, Spring Boot 3.5, Maven Wrapper, Spring Security, Spring Data JPA, PostgreSQL 16, Flyway, Testcontainers, Docker Compose, and springdoc OpenAPI.
+### Tecnologias e arquitetura
 
-## Requirements
+| Camada | Tecnologias utilizadas |
+| --- | --- |
+| Backend | Java 21, Spring Boot 3.5, Security, JPA, JDBC, Maven Wrapper |
+| Dados | PostgreSQL 16, Flyway, `BigDecimal` / `NUMERIC(17,2)` |
+| Frontend | React, TypeScript estrito, Vite, Tailwind CSS, primitivas próprias no padrão shadcn com Radix/CVA, Lucide |
+| Estado e formulários | TanStack Query, React Hook Form, Zod, React Router, i18next |
+| Gráficos e testes | Recharts, JUnit, Testcontainers, Vitest, Testing Library, Playwright |
+| Execução | Docker Compose, Nginx sem root, GitHub Actions |
 
-For host builds and tests: JDK 21 and network access for Maven dependencies. For the full local service or PostgreSQL integration profile: Docker Engine with Compose (or Docker Desktop on Windows). The wrapper supplies Maven. Docker Compose builds the app with JDK 21 and runs it on a Java 21 runtime image.
-
-## Start locally
-
-Clone the public repository, then follow the instructions for your shell:
-
-```sh
-git clone https://github.com/GuiNovaisz/ledgerflow-java-fintech.git
-cd ledgerflow-java-fintech
+```mermaid
+flowchart LR
+    UI[React SPA] -->|mesma origem /api| N[Nginx ou proxy Vite]
+    N --> API[Spring Boot]
+    CLI[Cliente de API] -->|Bearer JWT| API
+    API --> DB[(PostgreSQL)]
+    API --> S[Sessões em memória]
 ```
 
-### Linux / macOS shell
+O backend é um monólito modular organizado por capacidade. Uma transferência altera saldos e grava lançamentos na mesma transação. Locks de linha em ordem estável coordenam escritores; um lock transacional por chave de idempotência coordena repetições. O frontend mantém valores monetários como texto decimal e centavos `BigInt`; números de ponto flutuante são usados somente para desenhar gráficos.
 
-```sh
-chmod +x mvnw
-# Creates random local credentials; noclobber prevents replacing an existing .env.
-(set -C; umask 077; printf 'POSTGRES_PASSWORD=%s\nJWT_SECRET=%s\nAPP_PORT=8080\n' "$(openssl rand -base64 36 | tr -d '\n')" "$(openssl rand -base64 48 | tr -d '\n')" > .env)
-docker compose up --build -d --wait
-```
+[Arquitetura Full Stack](docs/fullstack-architecture.md) · [Domínio e invariantes](docs/architecture.md) · [Design e comparação visual](docs/design-system.md)
 
-### Windows PowerShell
+### Segurança
+
+O navegador usa cookie `HttpOnly`, `SameSite=Strict` e token CSRF em memória. Nenhum JWT ou cookie é salvo em localStorage: somente tema e idioma. APIs bearer permanecem em uma cadeia de segurança separada, sem herdar a sessão do navegador. Logout invalida a sessão; senhas usam BCrypt. Consultas e mutações validam o proprietário no servidor. CSV neutraliza fórmulas em texto controlado pelo usuário.
+
+Sessões têm 15 minutos de inatividade e são perdidas ao reiniciar o backend. Para HTTPS, configure `SESSION_COOKIE_SECURE=true`. O limite de autenticação é básico e, no proxy local, compartilhado pelo endereço do Nginx; não é uma solução distribuída contra abuso. A [auditoria](docs/verification-v0.2.0.md) registra dois avisos condicionais do Spring MVC analisados como não aplicáveis às funcionalidades usadas; não se afirma ausência absoluta de vulnerabilidades.
+
+### Interface real
+
+As imagens vêm do Chromium sobre os serviços reais, com uma identidade fictícia criada pelo script de demonstração. Valores e curvas não são dados estáticos inseridos no componente.
+
+| Claro | Mobile |
+| --- | --- |
+| ![Dashboard claro](docs/assets/screenshots/dashboard-light-desktop.png) | ![Dashboard mobile](docs/assets/screenshots/dashboard-mobile.png) |
+
+[Contas](docs/assets/screenshots/accounts.png) · [Transações](docs/assets/screenshots/transactions.png) · [Transferência](docs/assets/screenshots/transfer.png) · [Metas](docs/assets/screenshots/goals.png)
+
+### Como executar — Docker
+
+Requer Docker Engine com Compose. Node 24+ é necessário no host somente para o seed; Java 21 e Node são fornecidos pelas imagens durante o build.
+
+No Windows com PowerShell 7, a opção isolada não sobrescreve o ambiente anterior:
 
 ```powershell
-.\scripts\New-LocalEnvironment.ps1
-docker compose up --build -d --wait
+.\scripts\Start-FullStack.ps1 -Build -Demo
 ```
 
-The environment script creates `.env` with random secrets and refuses to overwrite an existing path. `.env` is ignored by Git. These Docker Compose steps do not require a host JDK; Compose builds the application with JDK 21. Compose binds PostgreSQL and the application to loopback by default; set `APP_PORT` in `.env` to change the application port. Inside Compose, the database is `postgres:5432`.
+Frontend: [localhost:18081](http://localhost:18081). Swagger: [localhost:18080/swagger-ui.html](http://localhost:18080/swagger-ui.html). Credenciais fictícias aleatórias ficam no arquivo privado `.local/demo/latest.json`; não são publicadas. Nas próximas inicializações use o mesmo script sem `-Demo`, para reutilizar os dados. `-Demo` adiciona uma nova identidade; nunca limpa o banco.
 
-To build or run tests on the host, install JDK 21 and use the Maven Wrapper. A Docker-compatible engine is required for the PostgreSQL integration profile, but not for unit tests. For example, run `./mvnw test` on Linux/macOS or `.\mvnw.cmd test` on PowerShell.
+Alternativa Compose padrão no PowerShell:
 
-OpenAPI UI: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). Health: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
+```powershell
+.\scripts\New-LocalEnvironment.ps1  # apenas na primeira execução; recusa sobrescrita
+docker compose up -d --build --wait
+```
 
-To stop containers and preserve the local database volume:
+Essa alternativa usa frontend **8081**, API **8080**, PostgreSQL **5432**, sempre em loopback. Em Linux/macOS, gere `.env` sem substituir um arquivo existente:
 
 ```sh
-docker compose down
+(set -C; umask 077; printf 'POSTGRES_PASSWORD=%s\nJWT_SECRET=%s\n' "$(openssl rand -base64 36 | tr -d '\n')" "$(openssl rand -base64 48 | tr -d '\n')" > .env)
+docker compose up -d --build --wait
 ```
 
-## Tests and release audit
+Para parar preservando os dados, use `docker compose down` com o mesmo projeto/arquivo de ambiente da inicialização. Para o script isolado: `docker compose --env-file .local/fullstack.env -p ledgerflow-demo-v02 down`. Não use `-v` para preservar o volume.
 
-Run unit tests with `./mvnw test` (Linux/macOS) or `.\mvnw.cmd test` (PowerShell). The PostgreSQL integration profile is `./mvnw -Pintegration verify` or `.\mvnw.cmd -Pintegration verify`; it requires JDK 21 and a working Docker-compatible engine and must not be described as verified if skipped or unavailable.
+### Desenvolvimento e testes
 
-The [v0.1.0 release audit](docs/release-audit.md) records **38 passing tests (28 unit + 10 PostgreSQL integration), zero skipped**, a healthy Compose environment and 10 passing local HTTP checks. The [first GitHub Actions run](https://github.com/GuiNovaisz/ledgerflow-java-fintech/actions/runs/40873784507) also passed the Maven suite, Docker image build and readiness check. Dependency patch updates and the applicability assessment for two remaining Spring advisories are documented in the audit. The [earlier 37-test record](docs/verification.md) is retained as historical evidence.
+JDK 21 para Maven; Node 24+ para frontend; Docker para testes de integração. Para desenvolvimento do frontend, mantenha a API na porta 8080, execute `npm ci` e `npm run dev` em `frontend/`; o Vite serve **5173** e encaminha `/api` para **8080**. Para executar Java fora do Docker, configure `DB_URL`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET` no processo e rode `./mvnw spring-boot:run`. Não coloque segredos em comandos versionados.
 
-After Compose is running, the PowerShell 7 API smoke script can be run with `./scripts/Verify-Api.ps1` (PowerShell) and creates synthetic data without clearing the database.
+```sh
+./mvnw -B -Pintegration verify             # Windows: .\mvnw.cmd
+cd frontend
+npm ci
+npm run lint
+npm run typecheck
+npm test
+npm run build
+npx playwright install chromium
+# Com Compose padrão em 8081:
+npx playwright test e2e/fullstack.spec.ts
+```
 
-## API overview
+Para as portas isoladas, defina `E2E_BASE_URL=http://127.0.0.1:18081` no processo. A captura opcional usa também `CAPTURE_PORTFOLIO=1` e `e2e/portfolio.spec.ts`, após criar a demo. Testes E2E criam somente identidades sintéticas novas. Não reutilizam o navegador pessoal.
 
-Public endpoints: `POST /api/v1/auth/register` and `POST /api/v1/auth/login`. Other `/api/**` routes require `Authorization: Bearer <accessToken>`.
+Resultado local do candidato: **51 testes Java**, **13 testes Vitest**, **6 cenários E2E** e **1 cenário de captura visual** aprovados. Lint, TypeScript e builds aprovados; npm audit sem achados. O novo workflow foi preparado, mas **CI remoto v0.2.0 ainda não executado**, pois publicação depende de autorização. Evidências, limites e comandos: [verificação v0.2.0](docs/verification-v0.2.0.md).
 
-| Capability | Routes |
+### API e estrutura
+
+| Capacidade | Rotas principais em `/api/v1` |
 | --- | --- |
-| Accounts | `POST /api/v1/accounts`, `GET /api/v1/accounts`, `GET /api/v1/accounts/{id}`, `PATCH /api/v1/accounts/{id}/status` |
-| Financial operations | `POST /api/v1/transactions/deposits`, `/withdrawals`, `/transfers` |
-| Account reporting | `GET /api/v1/accounts/{id}/entries`, `/summary`, `/statement.csv` |
+| Navegador | `/session/csrf`, `/session/register`, `/session/login`, `/session/me`, `/session/logout` |
+| Clientes bearer | `/auth/register`, `/auth/login` |
+| Contas | `/accounts`, `/accounts/{id}`, `/accounts/{id}/status` |
+| Movimentações | `/transactions/deposits`, `/transactions/withdrawals`, `/transactions/transfers` |
+| Dashboard e extrato | `/dashboard`, `/entries`, `/entries/export.csv` |
+| Recuperação e metas | `/operations/by-key/{key}`, `/goals`, `/goals/{id}` |
 
-Financial operations require an `Idempotency-Key` matching `[A-Za-z0-9._:-]{1,100}`. Retry a timed-out request with the same key and same semantic request; changing the request under an existing key returns a conflict. See [API examples](docs/requests.http).
+OpenAPI detalha métodos e schemas. Operações exigem `Idempotency-Key`; repetir com a mesma chave e payload evita duplicidade. Os endpoints de relatórios por conta da v0.1.0 continuam disponíveis. [Exemplos bearer](docs/requests.http).
 
-## Known limitations and security boundaries
+`src/`: backend e testes. `frontend/src/`: componentes, páginas, cliente HTTP, traduções e testes. `frontend/e2e/`: jornadas reais. `docker/`: frontend e proxy. `scripts/`: ambiente, demo e auditoria. `docs/learning/fullstack/`: [trilha de estudo e entrevistas](docs/learning/fullstack/README.md).
 
-- BRL only; amounts must be positive, have at most two fractional digits, and fit the supported precision. Fractions of a cent are rejected rather than rounded.
-- Transfers may credit another user's active account, but recipient owner data is not exposed. This is an internal account ledger, not a full double-entry general ledger with external clearing accounts.
-- Reports use UTC instants and half-open date ranges `[from,to)`. CSV exports are capped at 10,000 rows and neutralize spreadsheet formulas in user-controlled text.
-- Access tokens expire after 15 minutes. There are no refresh tokens, immediate token revocation, rate limits, MFA, or KYC/AML flows.
-- This project does not provide external reconciliation, currency conversion, fees, interest, production operations, compliance, or a public deployment.
+### Limitações e próximos passos
 
-## Next steps
+BRL somente; ledger interno, sem contabilidade geral completa, bancos, pagamentos ou conciliação externa. Categorias são fixas; metas têm progresso informado manualmente. Relatórios usam `[from,to)` em UTC, até 366 dias e CSV de até 10.000 linhas. Transferências próprias não contam como renda/despesa, mas geram dois lançamentos no extrato.
 
-Potential follow-up work includes reconciliation and audit tooling, operational monitoring, and identity and abuse controls suitable for a real service. Those require separate product and architecture decisions.
+Sessões em memória, sem recuperação de senha, MFA ou verificação de e-mail. JWTs de clientes externos expiram em 15 minutos, sem revogação imediata. Uma operação incerta mantém a chave na aba; fechar/recarregar a aba perde esse contexto, exigindo consulta ao extrato antes de uma nova tentativa. Não há garantia de conformidade WCAG completa; E2E cobre Chromium, sem uma matriz completa de navegadores. Não há implantação pública.
 
-## License and release notes
+Próximas melhorias: identidade e sessões distribuídas; conciliação automática entre saldos e lançamentos com observabilidade; acessibilidade e cobertura em múltiplos navegadores. [MIT](LICENSE) · [Changelog](CHANGELOG.md) · [Notas preparadas v0.2.0](docs/releases/v0.2.0.md).
 
-[MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [v0.1.0 release notes](docs/releases/v0.1.0.md) · [GitHub Release](https://github.com/GuiNovaisz/ledgerflow-java-fintech/releases/tag/v0.1.0)
+---
+
+## 🇺🇸 English
+
+### Overview and purpose
+
+LedgerFlow is an educational application for simulated accounts, transactions and financial planning. It demonstrates a complete user interface backed by explicit ownership, balance consistency and safe retry rules. It does not move real funds or connect to banks.
+
+### Features
+
+- Registration, login, read-only profile, server-side session expiry and logout.
+- Database-backed dashboard: total balance, income, expenses, operation count, daily balances and category breakdown.
+- BRL account creation, details, history and activation/deactivation.
+- Simulated deposits, withdrawals and transfers with confirmation, idempotency and outcome lookup after network failure.
+- Searchable, filtered, paginated statements, period reports and CSV export. Global search opens a filtered statement.
+- Translated fixed categories and versioned planning-goal CRUD. Goal progress is manual; it does not reserve funds.
+- Dark, light and system themes; Portuguese/English; desktop and mobile navigation.
+
+### Tech stack and architecture
+
+Java 21, Spring Boot 3.5, Security, JPA/JDBC, PostgreSQL 16, Flyway and Maven Wrapper form a modular monolith. The frontend uses React, strict TypeScript, Vite, Tailwind, owned shadcn-style Radix/CVA primitives, Lucide, TanStack Query, React Hook Form, Zod, React Router, i18next and Recharts. Tests use JUnit, Testcontainers, Vitest, Testing Library and Playwright. Docker Compose runs PostgreSQL, Java and an unprivileged Nginx frontend; GitHub Actions verifies changes.
+
+The diagram above shows the same-origin browser/proxy/API flow and the separate bearer-client flow. A transfer changes balances and writes postings in one database transaction. Ordered row locks coordinate writers; transaction-scoped advisory locks coordinate idempotency keys. Money uses `BigDecimal` / `NUMERIC(17,2)` on the server and decimal strings / `BigInt` cents on the client. Floating-point values are used only for chart rendering. [Full architecture](docs/fullstack-architecture.md) · [Domain invariants](docs/architecture.md).
+
+### Security
+
+The browser uses an HttpOnly, SameSite=Strict session cookie and an in-memory CSRF token. Only theme/language preferences enter localStorage. Bearer clients use a separate stateless security chain that does not inherit cookie authentication. Logout invalidates the server session; passwords use BCrypt; server-side ownership checks protect data. CSV output neutralizes spreadsheet formulas in user-controlled text.
+
+Sessions expire after 15 idle minutes and disappear on backend restart. Set `SESSION_COOKIE_SECURE=true` for HTTPS. Authentication throttling is basic; the local Nginx proxy shares an IP-based allowance and is not a distributed abuse-control solution. Two conditional Spring MVC advisories remain explicitly assessed as not applicable to the used features. See the [verification report](docs/verification-v0.2.0.md); this is not a claim of complete security.
+
+### UI
+
+All screenshots above were captured from Chromium against real services with synthetic persisted demo data. Charts are driven by the API. [Accounts](docs/assets/screenshots/accounts.png), [transactions](docs/assets/screenshots/transactions.png), [transfer](docs/assets/screenshots/transfer.png), [goals](docs/assets/screenshots/goals.png), [visual comparison](docs/design-system.md).
+
+### Running locally and Docker
+
+Docker Engine with Compose is required. Host Node 24+ is needed for the demo seed only; image builds supply Java and Node. On Windows PowerShell 7, run `./scripts/Start-FullStack.ps1 -Build -Demo`. It creates an isolated project at frontend **18081**, API **18080**, database **15432**, preserving older data. Random demo credentials stay in private `.local/demo/latest.json`. Restart without `-Demo` to reuse them; the seed adds new synthetic identities and never resets a database.
+
+For standard Compose, run `./scripts/New-LocalEnvironment.ps1` once, then `docker compose up -d --build --wait`. The script refuses to overwrite `.env`. On Linux/macOS, use the protected `openssl` environment-generation command shown in the Portuguese section. Standard ports are **8081 / 8080 / 5432**, bound to loopback. Stop with `docker compose down`, supplying the same project and environment options; omit `-v` to retain data.
+
+For development, use host JDK 21 and Node 24+. With the API on 8080, run `npm ci` and `npm run dev` in `frontend/`; Vite listens on **5173** and proxies `/api`. To run Java outside Docker, provide `DB_URL`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET` as process environment variables and run `./mvnw spring-boot:run` (`.\mvnw.cmd` on Windows).
+
+### Testing
+
+Run `./mvnw -B -Pintegration verify` with Docker available. In `frontend/`, run `npm ci`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npx playwright install chromium`, and `npx playwright test e2e/fullstack.spec.ts` against running Compose. Set `E2E_BASE_URL` when using nonstandard ports. Optional portfolio capture uses `CAPTURE_PORTFOLIO=1`, the seeded demo and `e2e/portfolio.spec.ts`. Tests use isolated contexts and new synthetic identities.
+
+Local candidate results: **51 Java tests**, **13 Vitest tests**, **6 E2E scenarios**, and **1 visual-capture scenario** passed. Lint, types and builds passed; npm audit found no advisories. The expanded workflow is prepared; **remote v0.2.0 CI has not run**, pending publication approval. [Evidence and scope](docs/verification-v0.2.0.md).
+
+### API and project structure
+
+Swagger is available at `/swagger-ui.html` on the API port. The route table above lists browser sessions, legacy bearer authentication, accounts, operations, owner-wide analytics, statements, outcome lookup and goals. Financial mutations require `Idempotency-Key`; retries must keep both key and payload unchanged. Existing per-account report endpoints remain supported. [Bearer examples](docs/requests.http).
+
+`src/` contains Java and its tests; `frontend/src/` contains UI, HTTP client, translations and tests; `frontend/e2e/` holds browser journeys; `docker/` defines the frontend/proxy; `scripts/` provides setup, fixtures and audits; [learning materials](docs/learning/fullstack/README.md) explain the implementation and interview topics.
+
+### Known limitations, roadmap and disclaimer
+
+BRL only; an internal account ledger rather than a full general ledger. No banks, payment rails or external reconciliation. Categories are fixed; goals are manual planning records. Reports use UTC half-open intervals, at most 366 days and 10,000 CSV rows. Own-account transfers are excluded from cash flow but produce two statement postings.
+
+Sessions are in memory. There is no password recovery, MFA or email verification. External-client JWTs expire after 15 minutes without immediate revocation. Uncertain-operation recovery state lives in the current tab; closing/reloading loses that context, so inspect history before initiating another operation. Full WCAG conformance and cross-browser coverage are not claimed; E2E uses Chromium. No public deployment is provided.
+
+Next priorities: stronger identity/distributed sessions, automated reconciliation and operational visibility, and broader accessibility/browser coverage. **Educational financial simulation only; no real money moves.** [MIT License](LICENSE) · [Changelog](CHANGELOG.md) · [Prepared v0.2.0 notes](docs/releases/v0.2.0.md).

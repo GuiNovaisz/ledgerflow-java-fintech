@@ -1,0 +1,14 @@
+npm notice run ledgerflow-frontend@0.2.0 test
+npm notice run vitest run
+
+ RUN  v5.0.5 <workspace>/frontend
+
+
+ Test Files  3 passed (3)
+      Tests  13 passed (13)
+   Start at  03:01:19
+   Duration  28.67s (environment 63%, import 17%, setup 14%, tests 4%, transform 1%)
+
+Environment  jsdom was created 3 times · 17.55s total, 63% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments

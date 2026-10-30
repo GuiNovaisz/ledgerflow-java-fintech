@@ -1,0 +1,37 @@
+[
+  {
+    "file": "accounts.png",
+    "bytes": 151295,
+    "sha256": "6f0811c88993a7f1b0a23253f225287f57a7b84ecbe4a66b255021eaf8a1d220"
+  },
+  {
+    "file": "dashboard-dark-desktop.png",
+    "bytes": 474306,
+    "sha256": "ecdf7c2f46a461663b0bbd7ed02708e24d7c8f9824dee52ad8c3df1f2ef01b1b"
+  },
+  {
+    "file": "dashboard-light-desktop.png",
+    "bytes": 476784,
+    "sha256": "db8405268276efc277f20abb1f215854ae0d1e2645eae3fafad44c4544d4bf83"
+  },
+  {
+    "file": "dashboard-mobile.png",
+    "bytes": 120865,
+    "sha256": "05d5315bf52f4f18aaca7077afdde0382016a65c5d9fef3310f224a3be8c6c87"
+  },
+  {
+    "file": "goals.png",
+    "bytes": 167849,
+    "sha256": "f24093e6a041e90bbb78f2354f49151e502b91ec0ff4c3fc72efd56e29674c7b"
+  },
+  {
+    "file": "transactions.png",
+    "bytes": 366921,
+    "sha256": "cfa519d52b90f0f8f5440a17fc070d3ab14160f62b3be82bf4c79104cf664ec2"
+  },
+  {
+    "file": "transfer.png",
+    "bytes": 214281,
+    "sha256": "a202262c217c4d2450af11c118df526ad5acc1366633a6b6713c4fe5a6c96b02"
+  }
+]

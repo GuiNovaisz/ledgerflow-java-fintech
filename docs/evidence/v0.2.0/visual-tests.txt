@@ -1,0 +1,10 @@
+npm notice run ledgerflow-frontend@0.2.0 npx
+npm notice run playwright test e2e/portfolio.spec.ts --reporter=list
+
+Running 1 test using 1 worker
+
+(node:33324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\portfolio.spec.ts:6:1 › capture real seeded demo for portfolio (5.9s)
+
+  1 passed (6.6s)

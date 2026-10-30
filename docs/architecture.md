@@ -1,5 +1,7 @@
 # LedgerFlow architecture
 
+> This document explains the original ledger/backend design. For v0.2.0 browser sessions, analytics, planning goals and frontend boundaries, see [Full Stack architecture](fullstack-architecture.md). The bearer-only description below describes the preserved API-client flow, not the new browser flow.
+
 LedgerFlow is a financial simulation built as one Java 21 / Spring Boot application with Maven and PostgreSQL. Deposits and withdrawals represent simulated money entering or leaving the system. It has no banking, card, payment-provider, settlement, or real-money integration.
 
 ## Modules and boundaries
