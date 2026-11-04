@@ -3,7 +3,6 @@ package com.ledgerflow.insights;
 import com.ledgerflow.account.application.AccountService;
 import com.ledgerflow.ledger.domain.Category;
 import com.ledgerflow.ledger.domain.LedgerEntry.Direction;
-import com.ledgerflow.reporting.application.ReportService;
 import com.ledgerflow.shared.BusinessException;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -27,7 +26,10 @@ import static com.ledgerflow.insights.InsightRepository.money;
 public class InsightService {
     private final InsightRepository repository;
     private final AccountService accounts;
-    InsightService(InsightRepository repository, AccountService accounts) { this.repository = repository; this.accounts = accounts; }
+    private final InsightCsvExporter csvExporter;
+    InsightService(InsightRepository repository, AccountService accounts, InsightCsvExporter csvExporter) {
+        this.repository = repository; this.accounts = accounts; this.csvExporter = csvExporter;
+    }
     public Dashboard dashboard(UUID owner, Instant from, Instant to) {
         InsightPeriod period = InsightPeriod.of(from, to);
         BigDecimal income = BigDecimal.ZERO, expenses = BigDecimal.ZERO;
@@ -62,13 +64,7 @@ public class InsightService {
         validateFilter(owner, filter);
         InsightPeriod period = InsightPeriod.of(from, to);
         if (repository.count(owner, period, filter) > 10000) throw new BusinessException(HttpStatus.BAD_REQUEST, "EXPORT_LIMIT", "CSV limit is 10000 entries. Select a shorter period.");
-        StringBuilder csv = new StringBuilder("id,accountId,accountName,operationId,type,direction,amount,currency,category,description,createdAt\r\n");
-        for (Entry entry : repository.entries(owner, period, filter, 0, 10000)) {
-            csv.append(entry.id()).append(',').append(entry.accountId()).append(',').append(ReportService.csvCell(entry.accountName())).append(',')
-                    .append(entry.operationId()).append(',').append(entry.type()).append(',').append(entry.direction()).append(',').append(entry.amount())
-                    .append(",BRL,").append(entry.category()).append(',').append(ReportService.csvCell(entry.description())).append(',').append(entry.createdAt()).append("\r\n");
-        }
-        return csv.toString();
+        return csvExporter.render(repository.entries(owner, period, filter, 0, 10000));
     }
     public OperationStatus operation(UUID owner, String key) {
         if (!key.matches("[A-Za-z0-9._:-]{1,100}")) throw new IllegalArgumentException("Invalid idempotency key");

@@ -55,6 +55,25 @@ class FullStackReportingIT {
     @Autowired ObjectMapper json;
 
     @Test
+    void openApiShowsPublicLoginAndBothProtectedAuthenticationModes() throws Exception {
+        JsonNode api = json.readTree(mvc.perform(get("/v3/api-docs")).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString());
+        JsonNode paths = api.path("paths");
+        assertThat(paths.path("/api/v1/session/login").path("post").path("security").isArray()).isTrue();
+        assertThat(paths.path("/api/v1/session/login").path("post").path("security").isEmpty()).isTrue();
+        assertThat(paths.path("/api/v1/auth/login").path("post").path("security").isEmpty()).isTrue();
+        assertThat(paths.path("/api/v1/session/login").path("post").path("responses").path("401")
+                .path("content").path("application/problem+json").path("schema").path("$ref").asText())
+                .isEqualTo("#/components/schemas/ApiProblem");
+        assertThat(paths.path("/api/v1/session/register").path("post").path("responses").has("409")).isTrue();
+        assertThat(paths.path("/api/v1/session/me").path("get").path("security").toString()).contains("cookieAuth");
+        assertThat(paths.path("/api/v1/dashboard").path("get").path("responses").has("401")).isTrue();
+        assertThat(paths.path("/api/v1/entries").path("get").path("parameters").toString()).doesNotContain("userId");
+        assertThat(api.path("components").path("securitySchemes").has("bearerAuth")).isTrue();
+        assertThat(api.path("components").path("securitySchemes").has("cookieAuth")).isTrue();
+    }
+
+    @Test
     void dashboardConservesBalancesWithoutDoubleCountingOwnTransfers() throws Exception {
         String owner = user(), other = user();
         String first = account(owner, "Main"), second = account(owner, "Savings"), foreign = account(other, "Private foreign account");

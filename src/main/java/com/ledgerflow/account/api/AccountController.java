@@ -3,8 +3,7 @@ package com.ledgerflow.account.api;
 import com.ledgerflow.account.application.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
+import com.ledgerflow.security.AuthenticatedUser;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -16,15 +15,15 @@ public class AccountController {
     private final AccountService accounts;
     public AccountController(AccountService accounts) { this.accounts = accounts; }
     @PostMapping @ResponseStatus(HttpStatus.CREATED)
-    public AccountView create(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CreateAccount request) {
-        return accounts.create(UUID.fromString(jwt.getSubject()), request.name());
+    public AccountView create(@AuthenticatedUser UUID userId, @Valid @RequestBody CreateAccount request) {
+        return accounts.create(userId, request.name());
     }
     @GetMapping
-    public List<AccountView> list(@AuthenticationPrincipal Jwt jwt) { return accounts.list(UUID.fromString(jwt.getSubject())); }
+    public List<AccountView> list(@AuthenticatedUser UUID userId) { return accounts.list(userId); }
     @GetMapping("/{id}")
-    public AccountView get(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) { return accounts.get(UUID.fromString(jwt.getSubject()), id); }
+    public AccountView get(@AuthenticatedUser UUID userId, @PathVariable UUID id) { return accounts.get(userId, id); }
     @PatchMapping("/{id}/status")
-    public AccountView status(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id, @Valid @RequestBody ChangeStatus request) {
-        return accounts.changeStatus(UUID.fromString(jwt.getSubject()), id, request.status());
+    public AccountView status(@AuthenticatedUser UUID userId, @PathVariable UUID id, @Valid @RequestBody ChangeStatus request) {
+        return accounts.changeStatus(userId, id, request.status());
     }
 }
