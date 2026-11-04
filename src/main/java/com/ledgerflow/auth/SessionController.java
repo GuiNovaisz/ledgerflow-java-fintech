@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.ledgerflow.security.AuthenticatedUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,8 +53,8 @@ public class SessionController {
     }
 
     @GetMapping("/me")
-    public UserResponse me(@AuthenticationPrincipal Jwt principal) {
-        return auth.profile(UUID.fromString(principal.getSubject()));
+    public UserResponse me(@AuthenticatedUser UUID userId) {
+        return auth.profile(userId);
     }
 
     @PostMapping("/logout")
