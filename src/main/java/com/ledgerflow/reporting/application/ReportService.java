@@ -5,6 +5,7 @@ import com.ledgerflow.ledger.domain.Category;
 import com.ledgerflow.ledger.persistence.LedgerEntryRepository;
 import com.ledgerflow.reporting.api.ReportDtos.*;
 import com.ledgerflow.shared.BusinessException;
+import com.ledgerflow.shared.CsvCell;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -72,9 +73,7 @@ public class ReportService {
         return csv.toString();
     }
     public static String csvCell(String value) {
-        String visible = value.stripLeading();
-        if (!visible.isEmpty() && "=+-@".indexOf(visible.charAt(0)) >= 0 || value.startsWith("\t") || value.startsWith("\r") || value.startsWith("\n")) value = "'" + value;
-        return "\"" + value.replace("\"", "\"\"") + "\"";
+        return CsvCell.encode(value);
     }
     private Period period(Instant from, Instant to) {
         Instant start = from == null ? Instant.EPOCH : from;
