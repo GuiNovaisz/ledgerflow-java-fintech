@@ -27,7 +27,6 @@ class InsightRepository {
     record Filter(UUID accountId, String q, Category category, Type type, Direction direction) { }
     record Query(String where, MapSqlParameterSource params) { }
     record DailyChange(LocalDate date, BigDecimal amount) { }
-    record Flow(Direction direction, Category category, BigDecimal total) { }
 
     private Query query(UUID owner, InsightPeriod period, Filter filter) {
         MapSqlParameterSource params = params(owner, period);
@@ -67,10 +66,10 @@ class InsightRepository {
                 + FROM + " where " + OWNED_PERIOD + " group by posting_date order by posting_date", params(owner, period),
                 (rs, n) -> new DailyChange(rs.getObject("posting_date", LocalDate.class), rs.getBigDecimal("amount")));
     }
-    List<Flow> flows(UUID owner, InsightPeriod period) {
+    List<FlowAmount> flows(UUID owner, InsightPeriod period) {
         return jdbc.query("select e.direction,o.category,sum(e.amount) total" + FROM + " where " + OWNED_PERIOD + EXTERNAL_FLOW
                 + " group by e.direction,o.category", params(owner, period),
-                (rs, n) -> new Flow(Direction.valueOf(rs.getString("direction")), Category.valueOf(rs.getString("category")), rs.getBigDecimal("total")));
+                (rs, n) -> new FlowAmount(Direction.valueOf(rs.getString("direction")), Category.valueOf(rs.getString("category")), rs.getBigDecimal("total")));
     }
     List<OperationStatus> operation(UUID owner, String key) {
         return jdbc.query("select * from operations where owner_id=:owner and idempotency_key=:key", Map.of("owner", owner, "key", key),
