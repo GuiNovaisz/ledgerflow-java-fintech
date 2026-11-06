@@ -2,14 +2,12 @@ package com.ledgerflow.insights;
 
 import com.ledgerflow.account.application.AccountService;
 import com.ledgerflow.ledger.domain.Category;
-import com.ledgerflow.ledger.domain.LedgerEntry.Direction;
 import com.ledgerflow.shared.BusinessException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +25,15 @@ public class InsightService {
     private final InsightRepository repository;
     private final AccountService accounts;
     private final InsightCsvExporter csvExporter;
+    private final FlowSummaryCalculator flowCalculator = new FlowSummaryCalculator();
     InsightService(InsightRepository repository, AccountService accounts, InsightCsvExporter csvExporter) {
         this.repository = repository; this.accounts = accounts; this.csvExporter = csvExporter;
     }
     public Dashboard dashboard(UUID owner, Instant from, Instant to) {
         InsightPeriod period = InsightPeriod.of(from, to);
-        BigDecimal income = BigDecimal.ZERO, expenses = BigDecimal.ZERO;
-        Map<Category, String> categories = new EnumMap<>(Category.class);
-        for (var flow : repository.flows(owner, period)) {
-            if (flow.direction() == Direction.CREDIT) income = income.add(flow.total());
-            else { expenses = expenses.add(flow.total()); categories.put(flow.category(), money(flow.total())); }
-        }
+        var flows = flowCalculator.calculate(repository.flows(owner, period));
+        Map<Category, String> categories = new java.util.EnumMap<>(Category.class);
+        flows.categories().forEach((category, total) -> categories.put(category, money(total)));
         Map<LocalDate, BigDecimal> changes = new HashMap<>();
         repository.dailyChanges(owner, period).forEach(change -> changes.put(change.date(), change.amount()));
         List<BalancePoint> series = new ArrayList<>();
@@ -50,7 +46,7 @@ public class InsightService {
             balance = balance.add(changes.getOrDefault(date, BigDecimal.ZERO));
             series.add(new BalancePoint(date, money(balance)));
         }
-        return new Dashboard(money(repository.totalBalance(owner)), money(income), money(expenses), repository.operationCount(owner, period),
+        return new Dashboard(money(repository.totalBalance(owner)), money(flows.income()), money(flows.expenses()), repository.operationCount(owner, period),
                 series, categories, repository.entries(owner, period, new InsightRepository.Filter(null, null, null, null, null), 0, 6));
     }
     public EntryPage entries(UUID owner, Instant from, Instant to, InsightRepository.Filter filter, int page, int size) {
