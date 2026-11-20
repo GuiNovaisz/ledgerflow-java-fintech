@@ -10,6 +10,8 @@
 
 ![Dashboard escuro com dados fictícios persistidos / Dark dashboard with persisted synthetic data](docs/assets/screenshots/dashboard-dark-desktop.png)
 
+Manutenção após v0.2.0: agregação de flows isolada e testada, sem nova release. / Post-v0.2.0 maintenance: isolated and tested flow aggregation, with no new release. [Auditoria final / Final audit](docs/architecture/final-normalization.md).
+
 ## 🇧🇷 Português (Brasil)
 
 ### Visão geral e objetivo
